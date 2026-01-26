@@ -159,14 +159,6 @@
   margin-bottom: var(--spacing-sm);
 }
 
-.form-label {
-  display: block;
-  margin-bottom: var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-}
-
 .form-input {
   width: 100%;
   font-size: var(--font-size-base);

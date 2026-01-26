@@ -450,7 +450,6 @@ img {
     max-width: 480px;
     margin: 0 auto;
     box-shadow: var(--shadow-xl);
-    border-radius: var(--border-radius-2xl);
     overflow: hidden;
   }
 }

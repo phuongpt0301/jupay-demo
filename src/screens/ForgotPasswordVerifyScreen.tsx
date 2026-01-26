@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import './screens.css';
 
 /**
@@ -7,8 +6,6 @@ import './screens.css';
  * Step 2 of 5 - Verify Your Email
  */
 const ForgotPasswordVerifyScreen: React.FC = () => {
-  const navigate = useNavigate();
-
   const handleOpenEmailApp = () => {
   };
 

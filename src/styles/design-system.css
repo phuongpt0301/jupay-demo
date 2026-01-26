@@ -371,7 +371,6 @@
   /* Visual */
   background-color: var(--color-input-bg);
   border: 2px solid var(--color-input-border);
-  border-radius: var(--border-radius-lg);
   
   /* Transitions */
   transition: border-color var(--duration-fast) var(--ease-out),
