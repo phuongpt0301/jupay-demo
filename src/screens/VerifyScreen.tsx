@@ -24,10 +24,12 @@ const VerifyScreen: React.FC = () => {
     // Simulate Singpass verification process (3 seconds)
     const verifyTimer = setTimeout(async () => {
       // Auto-login with demo credentials
-      await login({ username: 'demo', password: 'demo123' });
+      const success = await login({ username: 'demo', password: 'demo123' });
       
-      // Navigate to dashboard
-      navigate(`/${ScreenType.DASHBOARD}`);
+      // Navigate to all services screen after successful login
+      if (success) {
+        navigate(`/${ScreenType.ALL_SERVICES}`);
+      }
     }, 3000);
 
     return () => {
@@ -75,6 +77,11 @@ const VerifyScreen: React.FC = () => {
                     strokeLinecap="round" 
                     strokeLinejoin="round"
                     fill="none"/>
+              <path d="M9 12L11 14L15 10" 
+                    stroke="#666" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"/>
             </svg>
             <span>Bank-level encryption</span>
           </div>

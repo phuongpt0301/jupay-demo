@@ -25,7 +25,7 @@ const ForgotPasswordCodeScreen: React.FC = () => {
 
   const handleCodeChange = (index: number, value: string) => {
     if (value.length > 1) return; // Only allow single digit
-    
+
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
@@ -66,12 +66,17 @@ const ForgotPasswordCodeScreen: React.FC = () => {
   };
 
   return (
-    <div className="screen forgot-password-screen">
+    <div className="forgot-password-screen">
       <div className="forgot-password-container code-container">
         {/* Back Button */}
         <button className="back-btn-simple" onClick={handleBack} aria-label="Go back">
-          ←
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.369 4.22462C11.7618 3.90427 12.3408 3.92686 12.7069 4.29298C13.073 4.65909 13.0956 5.2381 12.7753 5.63087L12.7069 5.70704L6.41399 12L12.7069 18.293L12.7753 18.3692C13.0956 18.7619 13.073 19.3409 12.7069 19.707C12.3408 20.0732 11.7618 20.0958 11.369 19.7754L11.2929 19.707L4.29289 12.707C3.90237 12.3165 3.90237 11.6835 4.29289 11.293L11.2929 4.29298L11.369 4.22462Z" fill="#565E6D" />
+            <path d="M19 11C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13L5 13C4.44772 13 4 12.5523 4 12C4 11.4477 4.44772 11 5 11L19 11Z" fill="#565E6D" />
+          </svg>
         </button>
+
+        <div className="border" />
 
         {/* Title and Description */}
         <div className="code-header">
@@ -105,8 +110,8 @@ const ForgotPasswordCodeScreen: React.FC = () => {
         </p>
 
         {/* Verify Button */}
-        <button 
-          className="verify-code-btn" 
+        <button
+          className="verify-code-btn"
           onClick={handleVerifyCode}
           disabled={code.some(digit => digit === '')}
         >
@@ -114,8 +119,8 @@ const ForgotPasswordCodeScreen: React.FC = () => {
         </button>
 
         {/* Resend Code Button */}
-        <button 
-          className="resend-code-btn" 
+        <button
+          className="resend-code-btn"
           onClick={handleResendCode}
           disabled={timer > 0}
         >

@@ -56,7 +56,7 @@ const BottomNavigation: React.FC = () => {
       </button>
 
       <button
-        className={`nav-item ${isActive(`/${ScreenType.ALL_TRANSACTIONS}`) ? 'active' : ''}`}
+        className={`nav-item ${isActive(`/${ScreenType.ALL_SERVICES}`) ? 'active' : ''}`}
         onClick={() => handleNavigation(`/${ScreenType.ALL_SERVICES}`)}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -72,7 +72,7 @@ const BottomNavigation: React.FC = () => {
       </button>
 
       <button
-        className={`nav-item ${isActive(`/${ScreenType.PROFILE}`) ? 'active' : ''}`}
+        className={`nav-item ${isActive(`/${ScreenType.MENU}`) ? 'active' : ''}`}
         onClick={() => handleNavigation(`/${ScreenType.MENU}`)}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -327,9 +327,11 @@ class DemoDataServiceImpl implements DemoDataService {
    * Validate demo login credentials
    */
   validateCredentials(credentials: LoginCredentials): boolean {
+    // For demo purposes, accept any credentials that have text
+    // In production, this would validate against actual user database
     return (
-      credentials.username === DEMO_CREDENTIALS.username &&
-      credentials.password === DEMO_CREDENTIALS.password
+      credentials.username.trim().length > 0 &&
+      credentials.password.trim().length > 0
     );
   }
 

@@ -18,19 +18,19 @@ const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Simple validation - just check if fields have any text
     if (emailOrPhone.trim() && password.trim()) {
-      // Navigate to verify screen
-      navigate(`/${ScreenType.ALL_SERVICES}`);
+      // Navigate to all services screen after successful login
+      navigate(`/${ScreenType.VERIFY}`);
     }
   };
 
-  const handleSingpassLogin = () => {
-    // Navigate to verify screen for Singpass flow
-    navigate(`/${ScreenType.ALL_SERVICES}`);
+  const handleSingpassLogin = async () => {
+    // Navigate to all services screen after successful login
+    navigate(`/${ScreenType.VERIFY}`);
   };
 
   const handleForgotPassword = () => {

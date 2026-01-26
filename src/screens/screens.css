@@ -3072,7 +3072,7 @@
 
 /* Typography - use design system classes */
 .screen h1 {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-4);
   color: var(--color-text-primary);
@@ -3204,7 +3204,6 @@
 .forgot-password-link:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
-}
 }
 
 .forgot-password-link:disabled {
@@ -4836,7 +4835,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 0;
 }
 
 .verify-container {
@@ -4845,14 +4844,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
 }
 
 .verify-title {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 3rem 0;
-  text-align: left;
+  margin: 2rem 0 0 0;
+  text-align: center;
   width: 100%;
 }
 
@@ -4862,14 +4863,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
-  gap: 2rem;
+  flex: 1;
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
 
 .verify-spinner {
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   position: relative;
+  margin-bottom: 1rem;
 }
 
 .spinner-svg {
@@ -4912,50 +4915,71 @@
 }
 
 .verify-main-message {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
+  text-align: center;
 }
 
 .verify-sub-message {
-  font-size: 1rem;
-  color: #666;
+  font-size: 0.9375rem;
+  color: #999999;
   margin: 0;
+  text-align: center;
+  font-weight: 400;
 }
 
 .verify-security {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  margin-top: 2rem;
+  margin-top: auto;
+  padding-bottom: 1rem;
+}
+
+.verify-security svg {
+  width: 18px;
+  height: 18px;
 }
 
 .verify-security span {
-  font-size: 0.875rem;
-  color: #666;
+  font-size: 0.8125rem;
+  color: #171A1F;
+  font-weight: 400;
 }
 
 .verify-cancel-btn {
-  margin-top: 2rem;
-  padding: 0.75rem 2rem;
   background: none;
   border: none;
-  color: #999;
+  color: #565E6D;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: auto;
 }
 
 .verify-cancel-btn:hover {
-  color: #666;
+  opacity: 0.7;
+}
+
+.verify-cancel-btn:active {
+  opacity: 0.5;
 }
 
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .login-screen,
   .verify-screen {
+    padding: 0;
+  }
+  
+  .verify-container {
     padding: 1.5rem 1rem;
   }
   
@@ -4965,7 +4989,11 @@
   
   .verify-title {
     font-size: 1.25rem;
-    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+  }
+  
+  .verify-content {
+    margin-top: 2rem;
   }
   
   .verify-spinner {
@@ -5007,25 +5035,6 @@
   align-items: flex-start;
   gap: 1rem;
   margin-bottom: 2rem;
-}
-
-.back-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  color: #1a1a1a;
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.back-btn:hover {
-  background: #f8f9fa;
-  border-radius: 8px;
 }
 
 .register-header-text {
@@ -5485,12 +5494,13 @@
    ============================================================================ */
 
 .forgot-password-screen {
-  background: white;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 400px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  min-height: 100vh;
+  align-items: stretch;
 }
 
 .forgot-password-container {
@@ -5500,12 +5510,13 @@
   flex-direction: column;
 }
 
+.back-btn,
 .back-btn-simple {
   background: none;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 1rem;
   color: #1a1a1a;
   align-self: flex-start;
   min-width: 44px;
@@ -5609,21 +5620,16 @@
 .open-email-btn {
   width: 100%;
   padding: 1rem;
-  background: #1a1a1a;
-  color: white;
+  color: #565E6D;
+  background: transparent;
   border: none;
-  border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
   margin-bottom: 1rem;
 }
 
 .open-email-btn:hover {
-  background: #333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: .8;
 }
 
 .resend-email-btn {
@@ -5668,7 +5674,7 @@
 
 .code-description {
   font-size: 1rem;
-  color: #666;
+  color: #171A1F;
   margin: 0;
 }
 
@@ -5684,14 +5690,13 @@
   width: 50px;
   height: 60px;
   border: 2px solid #e1e5e9;
-  border-radius: 8px;
   text-align: center;
   font-size: 1.5rem;
   font-weight: 600;
   color: #1a1a1a;
   background: white;
   transition: border-color 0.2s ease;
-  padding: 0;
+  padding: 0 !important;
 }
 
 .code-input-box:focus {
@@ -5709,25 +5714,20 @@
 .verify-code-btn {
   width: 100%;
   padding: 1rem;
-  background: #1a1a1a;
-  color: white;
+  background: transparent;
+  color: #565E6D;
   border: none;
-  border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
   margin-bottom: 1rem;
 }
 
 .verify-code-btn:hover:not(:disabled) {
-  background: #333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: .8;
 }
 
 .verify-code-btn:disabled {
-  background: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -5762,21 +5762,21 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
-.new-password-title {
-  font-size: 1.5rem;
+.new-password-title,
+.create-account-title {
+  font-size: 1.5rem !important;
   font-weight: 600;
   color: #1a1a1a;
   margin: 0;
   flex: 1;
-  text-align: center;
+  text-align: left;
   margin-right: 44px; /* Balance the back button */
 }
 
 .password-hint {
-  font-size: 0.875rem;
+  font-size: 0.8rem !important;
   color: #666;
   margin-top: 0.25rem;
 }
@@ -5789,6 +5789,25 @@
   padding: 1rem;
   background: #f8f9fa;
   border-radius: 8px;
+}
+
+.password-hint-container {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.password-hint-container .password-hint-block {
+  background-color: #F3F4F6;
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.password-hint-container .password-hint-block.valid {
+  background-color: #10b981;
 }
 
 .requirement {
@@ -5804,7 +5823,7 @@
 }
 
 .requirement-icon {
-  font-size: 1rem;
+  font-size: 0.5rem;
   font-weight: 600;
   width: 20px;
   height: 20px;
@@ -5823,8 +5842,8 @@
 .reset-password-btn {
   width: 100%;
   padding: 1rem;
-  background: #1a1a1a;
-  color: white;
+  background: transparent;
+  color: #565E6D;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -5835,13 +5854,10 @@
 }
 
 .reset-password-btn:hover:not(:disabled) {
-  background: #333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: .8;
 }
 
 .reset-password-btn:disabled {
-  background: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
@@ -5888,56 +5904,82 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  padding-top: 1rem;
+  padding: 2rem 1.5rem;
+  min-height: 100vh;
+  align-items: stretch;
 }
 
-.back-btn-centered-wrapper {
-  display: flex;
-  justify-content: center;
+.forgot-password-container-centered .border {
+  height: 1px;
+  width: 30%;
+  margin: 0 auto;
+  background-color: #DEE1E6;
   margin-bottom: 2rem;
 }
 
-.back-btn-centered {
+.forgot-password-screen .border,
+.create-account-container .border {
+  height: 1px;
+  width: 100%;
+  background-color: #DEE1E6;
+  margin-bottom: 2rem;
+}
+
+.back-btn-left {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  border-bottom: none !important;
   cursor: pointer;
   padding: 0.5rem;
+  padding-left: 0;
   color: #1a1a1a;
   min-width: 44px;
   min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
+  margin-left: 0;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: opacity 0.2s ease;
+  box-shadow: none;
+  outline: none;
 }
 
-.back-btn-centered:hover {
-  background: #f8f9fa;
-  border-radius: 8px;
+.back-btn-left:hover {
+  opacity: 0.7;
+}
+
+.back-btn-left:active {
+  opacity: 0.5;
 }
 
 .forgot-password-header-centered {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .forgot-password-title-centered {
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 1rem 0;
 }
 
 .forgot-password-description-centered {
-  font-size: 1rem;
+  font-size: 1rem !important;
   color: #666;
   margin: 0;
   line-height: 1.5;
+  font-weight: 400;
 }
 
 .form-group-centered {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   text-align: left;
+  width: 100%;
 }
 
 .form-label-centered {
@@ -5957,48 +5999,58 @@
 .email-icon-centered {
   position: absolute;
   left: 1rem;
-  font-size: 1.25rem;
+  width: 20px;
+  height: 20px;
   pointer-events: none;
-  color: #666;
+  z-index: 1;
 }
 
 .form-input-centered {
   width: 100%;
-  padding: 0.875rem 1rem 0.875rem 3rem;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
+  padding: 0.875rem 1rem 0.875rem 3rem !important;
+  border: 1px solid #e0e0e0;
   font-size: 1rem;
   color: #1a1a1a;
   background: white;
   transition: border-color 0.2s ease;
   box-sizing: border-box;
+  min-height: 44px;
 }
 
 .form-input-centered::placeholder {
-  color: #999;
+  color: #999999;
 }
 
 .form-input-centered:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #1a1a1a;
 }
 
 .send-reset-link-btn {
-  width: 100%;
-  padding: 1rem;
-  background: white;
-  color: #999;
+  background: none;
   border: none;
-  border-radius: 8px;
+  padding: 0;
+  margin: 1.5rem 0;
+  font-family: inherit;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
+  color: #1a1a1a;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-bottom: 1rem;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  align-self: center;
+  text-align: center;
 }
 
 .send-reset-link-btn:hover:not(:disabled) {
-  color: #666;
+  opacity: 0.7;
+}
+
+.send-reset-link-btn:active:not(:disabled) {
+  opacity: 0.5;
 }
 
 .send-reset-link-btn:disabled {
@@ -6007,19 +6059,30 @@
 }
 
 .back-to-login-link {
-  width: 100%;
-  padding: 1rem;
   background: none;
   border: none;
-  color: #999;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 400;
+  color: #1a1a1a;
   cursor: pointer;
-  transition: color 0.2s ease;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  align-self: center;
+  text-align: center;
 }
 
 .back-to-login-link:hover {
-  color: #666;
+  opacity: 0.7;
+}
+
+.back-to-login-link:active {
+  opacity: 0.5;
 }
 
 /* Responsive adjustments for forgot password centered */
@@ -6039,33 +6102,26 @@
    ============================================================================ */
 
 .create-account-screen {
-  background: white;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 400px;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 1rem;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  min-height: 100vh;
+  align-items: stretch;
 }
 
 .create-account-container {
   width: 100%;
-  max-width: 480px;
-  padding: 1rem 0;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 .create-account-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.create-account-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin: 0;
-  flex: 1;
 }
 
 .create-account-form {
@@ -6083,7 +6139,6 @@
   width: 100%;
   padding: 0.875rem 1rem;
   border: 1px solid #e1e5e9;
-  border-radius: 8px;
   font-size: 1rem;
   color: #1a1a1a;
   background: white;
@@ -6135,7 +6190,7 @@
   width: 100%;
   padding: 1rem;
   background: white;
-  color: #999;
+  color: #000000;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
