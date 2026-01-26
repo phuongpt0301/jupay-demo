@@ -271,8 +271,7 @@ button:disabled {
 
 /* Input Base Styles - Touch-Friendly */
 input:not([type="checkbox"]):not([type="radio"]),
-textarea,
-select {
+textarea {
   font-family: inherit;
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
