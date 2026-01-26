@@ -239,7 +239,6 @@ button {
   padding: var(--spacing-md) var(--spacing-xl);
   
   border: 1px solid transparent;
-  border-radius: var(--border-radius-lg);
   background-color: var(--color-primary);
   color: var(--color-text-inverse);
   
@@ -283,7 +282,6 @@ select {
   padding: var(--spacing-md) var(--spacing-lg);
 
   border: 1px solid var(--color-gray-300);
-  border-radius: var(--border-radius-lg);
   background-color: var(--color-white);
   color: var(--color-text-primary);
 

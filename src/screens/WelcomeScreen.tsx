@@ -59,21 +59,23 @@ const WelcomeScreen: React.FC = () => {
           <h1 className="welcome-main-title">Payments App</h1>
         </div>
 
-        {/* Login Buttons */}
+        {/* Login Options */}
         <div className="welcome-login-section">
           <button 
-            className="welcome-btn welcome-btn-primary"
+            className="welcome-login-link"
             onClick={handleSingpassLogin}
           >
             Login with Singpass
           </button>
 
           <div className="welcome-divider">
+            <div className="welcome-divider-line"></div>
             <span>or</span>
+            <div className="welcome-divider-line"></div>
           </div>
 
           <button 
-            className="welcome-btn welcome-btn-secondary"
+            className="welcome-login-link"
             onClick={handleEmailPhoneLogin}
           >
             Login with Email/Phone

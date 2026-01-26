@@ -156,7 +156,7 @@
 
 /* Form Styles */
 .form-group {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
 }
 
 .form-label {
