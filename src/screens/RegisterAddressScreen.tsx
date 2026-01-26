@@ -12,7 +12,9 @@ const RegisterAddressScreen: React.FC = () => {
   const [selectedMethod, setSelectedMethod] = useState<'singpass' | 'manual' | null>(null);
 
   const handleContinue = () => {
-    if (selectedMethod) {
+    if (selectedMethod === 'singpass') {
+      navigate(`/${ScreenType.REGISTER_SECURITY}`);
+    } else {
       navigate(`/${ScreenType.REGISTER_DOCUMENTS}`);
     }
   };

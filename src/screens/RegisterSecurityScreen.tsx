@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
 import './screens.css';
+import useAuth from '../hooks/useAuth';
 
 /**
  * RegisterSecurityScreen Component
@@ -9,15 +10,18 @@ import './screens.css';
  */
 const RegisterSecurityScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [biometric, setBiometric] = useState(false);
   const [pin, setPin] = useState(false);
 
   const handleContinueToDashboard = () => {
-    navigate(`/${ScreenType.DASHBOARD}`);
+    login({ username: 'demo', password: 'demo123' });
+    navigate(`/${ScreenType.ALL_TRANSACTIONS}`);
   };
 
   const handleSkip = () => {
-    navigate(`/${ScreenType.DASHBOARD}`);
+    login({ username: 'demo', password: 'demo123' });
+    navigate(`/${ScreenType.ALL_TRANSACTIONS}`);
   };
 
   const handleBack = () => {

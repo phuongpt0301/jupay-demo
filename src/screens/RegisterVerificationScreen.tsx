@@ -14,12 +14,12 @@ const RegisterVerificationScreen: React.FC = () => {
 
   useEffect(() => {
     // Auto-login after 3 seconds and navigate to dashboard
-    // const timer = setTimeout(async () => {
-    //   await login({ username: 'demo', password: 'demo123' });
-    //   navigate(`/${ScreenType.REGISTER_SECURITY}`);
-    // }, 5000);
+    const timer = setTimeout(async () => {
+      await login({ username: 'demo', password: 'demo123' });
+      navigate(`/${ScreenType.REGISTER_SECURITY}`);
+    }, 5000);
 
-    // return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
   }, [navigate, login]);
 
   const handleCheckStatus = () => {

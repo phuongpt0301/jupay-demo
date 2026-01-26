@@ -1503,6 +1503,11 @@
   top: 10px;
 }
 
+.help-search .search-icon {
+  left: 10px;
+  top: 10px;
+}
+
 .search-input {
   width: 100%;
   padding: 12px 16px 12px 40px;
@@ -1524,6 +1529,7 @@
 
 .services-search .search-input-wrapper .search-input,
 .recipient-search .search-input-wrapper .search-input,
+.help-search .search-input-wrapper .search-input,
 .transactions-search .search-input-wrapper .search-input {
   padding: 0.5rem 1rem 0.5rem 2.2rem;
 }
@@ -5302,7 +5308,6 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem;
-  border: 1px solid #e1e5e9;
   border-radius: 8px;
   background: white;
 }
@@ -5321,8 +5326,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f8f9fa;
-  border-radius: 8px;
   flex-shrink: 0;
 }
 
@@ -9301,8 +9304,6 @@ kyc-compliance-content {
   align-items: center;
   gap: 1rem;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 12px;
   margin-bottom: 2rem;
 }
 
@@ -9338,9 +9339,7 @@ kyc-compliance-content {
 
 .menu-edit-btn {
   padding: 0.5rem 1rem;
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 6px;
+  background: transparent;
   font-size: 0.875rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -9350,7 +9349,7 @@ kyc-compliance-content {
 .menu-items {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -9361,7 +9360,6 @@ kyc-compliance-content {
   padding: 1rem;
   background: white;
   border: none;
-  border-bottom: 1px solid #e1e5e9;
   cursor: pointer;
   text-align: left;
   transition: background 0.2s ease;
@@ -9399,14 +9397,12 @@ kyc-compliance-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   padding: 1rem;
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
+  background: transparent;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #565E6D;
   cursor: pointer;
   margin-bottom: 2rem;
 }
@@ -9417,8 +9413,8 @@ kyc-compliance-content {
 
 .menu-version {
   text-align: center;
-  font-size: 0.8125rem;
-  color: #999;
+  font-size: 0.7125rem !important;
+  color: #171A1F !important;
   margin: 0;
 }
 
@@ -9445,7 +9441,6 @@ kyc-compliance-content {
   justify-content: space-between;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e1e5e9;
 }
 
 .payment-methods-title {
@@ -9466,9 +9461,6 @@ kyc-compliance-content {
 
 .card-item {
   padding: 1.5rem;
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
 }
 
 .card-info-row {
@@ -9479,8 +9471,9 @@ kyc-compliance-content {
 }
 
 .card-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
+  background-color: #9095A0;
+  width: 32px;
+  height: 20px;
 }
 
 .card-details {
@@ -9498,13 +9491,12 @@ kyc-compliance-content {
 
 .card-expiry {
   font-size: 0.875rem;
-  color: #666;
+  color: #171A1F;
 }
 
 .default-badge {
   padding: 0.25rem 0.75rem;
-  background: #d4edda;
-  color: #155724;
+  color: #171A1F;
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 12px;
@@ -9520,8 +9512,6 @@ kyc-compliance-content {
 .card-action-btn {
   padding: 0.5rem 1rem;
   background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
   color: #666;
@@ -9530,8 +9520,6 @@ kyc-compliance-content {
 
 .card-action-btn.delete {
   margin-left: auto;
-  border-color: #dc3545;
-  color: #dc3545;
 }
 
 .add-new-card-btn {
@@ -9543,10 +9531,9 @@ kyc-compliance-content {
   padding: 1rem;
   background: white;
   border: 1px solid #e1e5e9;
-  border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #565E6D;
   cursor: pointer;
 }
 
@@ -9785,7 +9772,6 @@ kyc-compliance-content {
   justify-content: space-between;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e1e5e9;
 }
 
 .notifications-title {
@@ -9804,7 +9790,7 @@ kyc-compliance-content {
 .notification-section-title {
   font-size: 0.875rem;
   font-weight: 700;
-  color: #666;
+  color: #171A1F;
   margin: 0 0 1rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -9817,7 +9803,6 @@ kyc-compliance-content {
   gap: 1rem;
   padding: 1rem;
   background: white;
-  border-bottom: 1px solid #e1e5e9;
 }
 
 .notification-info {
@@ -9928,9 +9913,7 @@ kyc-compliance-content {
 .profile-photo-large {
   width: 120px;
   height: 120px;
-  border-radius: 8px;
-  background: #f8f9fa;
-  border: 2px solid #e1e5e9;
+  border: 1px solid #e1e5e9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9941,14 +9924,10 @@ kyc-compliance-content {
 
 .edit-photo-btn {
   position: absolute;
-  bottom: -8px;
-  right: -8px;
+  bottom: -4px;
+  right: -4px;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background: white;
-  border: 2px solid #e1e5e9;
-  font-size: 1.25rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -9962,7 +9941,6 @@ kyc-compliance-content {
   padding: 0.5rem 1rem;
   background: white;
   border: 1px solid #e1e5e9;
-  border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -9987,12 +9965,12 @@ kyc-compliance-content {
 .profile-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #666;
+  color: #171A1F;
 }
 
 .profile-value {
   font-size: 1rem;
-  color: #1a1a1a;
+  color: #171A1F;
   margin: 0;
   line-height: 1.5;
 }
@@ -10004,7 +9982,6 @@ kyc-compliance-content {
 .help-center-screen {
   background: white;
   min-height: 100vh;
-  padding: 1rem;
 }
 
 .help-center-container {
@@ -10014,13 +9991,20 @@ kyc-compliance-content {
   padding-bottom: 2rem;
 }
 
+.help-center-content {
+  padding: 0 1rem;
+}
+
+.faq-icon-expanded {
+  rotate: 180deg;
+  transition: transform 0.3s ease;
+}
+
 .help-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e1e5e9;
+  padding: 1rem;
 }
 
 .help-title {
@@ -10048,7 +10032,7 @@ kyc-compliance-content {
 }
 
 .faq-item {
-  border-bottom: 1px solid #e1e5e9;
+  margin-bottom: 16px;
 }
 
 .faq-question {
@@ -10082,7 +10066,7 @@ kyc-compliance-content {
 }
 
 .contact-title {
-  font-size: 1.125rem;
+  font-size: 1.225rem;
   font-weight: 600;
   color: #1a1a1a;
   margin: 0 0 1rem 0;
@@ -10095,7 +10079,6 @@ kyc-compliance-content {
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem;
-  border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
@@ -10103,14 +10086,14 @@ kyc-compliance-content {
 }
 
 .contact-btn.live-chat {
-  background: #1a1a1a;
-  color: white;
+  background: transparent;
+  color: #565E6D;
   border: none;
 }
 
 .contact-btn.email-support {
   background: white;
-  color: #1a1a1a;
+  color: #565E6D;
   border: 1px solid #e1e5e9;
 }
 
@@ -10121,7 +10104,7 @@ kyc-compliance-content {
 .support-hours {
   text-align: center;
   font-size: 0.875rem;
-  color: #666;
+  color: #171A1F;
   margin: 1rem 0 0 0;
 }
 
@@ -10131,7 +10114,12 @@ kyc-compliance-content {
   align-items: center;
   gap: 1rem;
   padding-top: 2rem;
-  border-top: 1px solid #e1e5e9;
+}
+
+.footer-links {
+  display: flex;
+  min-width: none;
+  gap: 2rem;
 }
 
 .footer-link {
@@ -10140,7 +10128,7 @@ kyc-compliance-content {
   font-size: 0.875rem;
   color: #666;
   cursor: pointer;
-  text-decoration: underline;
+  padding: 0;
 }
 
 .version-text {
