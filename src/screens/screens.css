@@ -9283,6 +9283,8 @@ kyc-compliance-content {
 
 .menu-close-btn {
   width: 40px;
+  height: 42px;
+  min-height: 42px;
   border: none;
   background: #f8f9fa;
   border-radius: 50%;
