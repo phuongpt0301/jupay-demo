@@ -1,0 +1,342 @@
+/* Loading Error Boundary Styles */
+
+.loading-error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+.loading-error-content {
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+/* Error Icon */
+.loading-error-icon {
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%);
+  color: #d97706;
+}
+
+/* Typography */
+.loading-error-boundary h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  color: var(--color-text-primary, #1f2937);
+}
+
+.loading-error-message {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary, #6b7280);
+  margin: 0 0 1.5rem;
+}
+
+/* Retry Information */
+.retry-info {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  border-left: 4px solid #3b82f6;
+}
+
+.retry-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Action Buttons */
+.loading-error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.loading-error-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px; /* Touch-friendly */
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-error-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.loading-error-actions .btn:active {
+  transform: translateY(0);
+}
+
+.loading-error-actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Button Variants */
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.btn-secondary {
+  background: var(--color-gray-100, #f3f4f6);
+  color: var(--color-text-primary, #1f2937);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-gray-200, #e5e7eb);
+  border-color: var(--color-gray-400, #9ca3af);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-text-primary, #1f2937);
+  border: 2px solid var(--color-gray-300, #d1d5db);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--color-gray-50, #f9fafb);
+  border-color: var(--color-gray-400, #9ca3af);
+}
+
+/* Loading state for retry button */
+.btn:disabled::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Technical Details */
+.loading-error-details {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.loading-error-details summary {
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-text-primary, #1f2937);
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.loading-error-details summary:hover {
+  background: #f3f4f6;
+}
+
+.loading-error-details-content {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.loading-error-details-content p {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.loading-error-details-content strong {
+  color: var(--color-text-primary, #1f2937);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .loading-error-boundary {
+    padding: 0.75rem;
+  }
+  
+  .loading-error-content {
+    padding: 1.5rem;
+  }
+  
+  .loading-error-icon {
+    width: 64px;
+    height: 64px;
+  }
+  
+  .loading-error-boundary h2 {
+    font-size: 1.25rem;
+  }
+  
+  .loading-error-actions {
+    gap: 0.5rem;
+  }
+  
+  .loading-error-actions .btn {
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    min-height: 52px;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+  .loading-error-boundary {
+    min-height: 100vh;
+    padding: 0.5rem;
+  }
+  
+  .loading-error-content {
+    padding: 1.25rem;
+  }
+  
+  .loading-error-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .loading-error-content {
+    border: 2px solid currentColor;
+  }
+  
+  .loading-error-details-content {
+    border: 2px solid currentColor;
+  }
+  
+  .retry-info {
+    border-left-width: 6px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .loading-error-actions .btn {
+    transition: none;
+  }
+  
+  .loading-error-actions .btn:hover {
+    transform: none;
+  }
+  
+  .btn:disabled::after {
+    animation: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .loading-error-boundary {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  }
+  
+  .loading-error-content {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+  }
+  
+  .loading-error-icon {
+    background: linear-gradient(135deg, #451a03 0%, #92400e 100%);
+    color: #fbbf24;
+  }
+  
+  .retry-info {
+    background: #374151;
+    border-left-color: #60a5fa;
+  }
+  
+  .retry-info p {
+    color: #d1d5db;
+  }
+  
+  .loading-error-details summary:hover {
+    background: #374151;
+  }
+  
+  .loading-error-details-content {
+    background: #374151;
+    border-color: #4b5563;
+  }
+  
+  .btn-secondary {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+  
+  .btn-secondary:hover:not(:disabled) {
+    background: #4b5563;
+    border-color: #6b7280;
+  }
+  
+  .btn-outline {
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+  
+  .btn-outline:hover:not(:disabled) {
+    background: #374151;
+    border-color: #6b7280;
+  }
+}
+
+/* Focus styles for accessibility */
+.loading-error-actions .btn:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.loading-error-details summary:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}

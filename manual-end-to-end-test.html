@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JuPay Demo - Manual End-to-End Testing</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #6366f1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        
+        .test-section h2 {
+            color: #374151;
+            margin-top: 0;
+            border-bottom: 2px solid #6366f1;
+            padding-bottom: 10px;
+        }
+        
+        .test-step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #6366f1;
+        }
+        
+        .test-step h3 {
+            margin: 0 0 10px 0;
+            color: #1f2937;
+        }
+        
+        .expected {
+            background-color: #f0f9ff;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-left: 3px solid #0ea5e9;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            margin: 8px 0;
+            padding: 8px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+        
+        .checklist input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .app-frame {
+            width: 375px;
+            height: 667px;
+            border: 2px solid #374151;
+            border-radius: 20px;
+            margin: 20px auto;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .app-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .status.pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status.success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background: #4f46e5;
+        }
+        
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #6366f1;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #6366f1;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 JuPay Demo - Manual End-to-End Testing</h1>
+        
+        <div class="status pending" id="status">
+            Ready to begin testing - Click "Start App" to launch the JuPay Demo
+        </div>
+        
+        <div class="controls">
+            <button onclick="startApp()" id="startBtn">Start App</button>
+            <button onclick="resetTest()" id="resetBtn">Reset Test</button>
+            <button onclick="toggleFullscreen()" id="fullscreenBtn">Toggle Fullscreen</button>
+        </div>
+        
+        <div class="app-frame" id="appFrame" style="display: none;">
+            <iframe id="appIframe" src=""></iframe>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Test Flow 1: First-Time User Journey</h2>
+            <p><strong>Objective:</strong> Complete full user journey from splash screen to payment confirmation</p>
+            
+            <div class="test-step">
+                <h3>Step 1: Splash Screen</h3>
+                <p>The app should start with the JuPay splash screen</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> JuPay logo and branding visible</li>
+                        <li><input type="checkbox"> "Your trusted payment companion" tagline</li>
+                        <li><input type="checkbox"> Fade-in animation effect</li>
+                        <li><input type="checkbox"> Auto-navigation to login after ~2.5 seconds</li>
+                        <li><input type="checkbox"> Loading state shown during transition (3 seconds)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-step">
+                <h3>Step 2: Login Screen</h3>
+                <p>User should be automatically navigated to the login screen</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> "Welcome Back" heading visible</li>
+                        <li><input type="checkbox"> Username and password input fields</li>
+                        <li><input type="checkbox"> Demo credentials hint displayed</li>
+                        <li><input type="checkbox"> "Forgot Password?" link present</li>
+                        <li><input type="checkbox"> Sign In button enabled</li>
+                    </ul>
+                </div>
+                <p><strong>Action:</strong> Enter demo credentials (username: "demo", password: "password") and click Sign In</p>
+            </div>
+            
+            <div class="test-step">
+                <h3>Step 3: Dashboard Screen</h3>
+                <p>After successful login, user should see the main dashboard</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> "Welcome back!" greeting</li>
+                        <li><input type="checkbox"> Account balance displayed ($1,234.56)</li>
+                        <li><input type="checkbox"> Quick action buttons: Send, Receive, Pay Bills</li>
+                        <li><input type="checkbox"> Recent transactions section</li>
+                        <li><input type="checkbox"> "View All" link for transactions</li>
+                        <li><input type="checkbox"> Profile & Settings button</li>
+                    </ul>
+                </div>
+                <p><strong>Action:</strong> Click the "Send" button to initiate a payment</p>
+            </div>
+            
+            <div class="test-step">
+                <h3>Step 4: Payment Screen</h3>
+                <p>User should navigate to the payment screen with loading state</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Loading message "Opening payment screen..." (3 seconds)</li>
+                        <li><input type="checkbox"> "Send Money" heading</li>
+                        <li><input type="checkbox"> Recipient input field</li>
+                        <li><input type="checkbox"> Amount input field</li>
+                        <li><input type="checkbox"> Payment method selection</li>
+                        <li><input type="checkbox"> Send Payment button</li>
+                        <li><input type="checkbox"> Back button present</li>
+                    </ul>
+                </div>
+                <p><strong>Action:</strong> Fill in recipient (john@example.com) and amount ($50.00), then click Send Payment</p>
+            </div>
+            
+            <div class="test-step">
+                <h3>Step 5: Payment Confirmation</h3>
+                <p>Payment should be processed and confirmation screen displayed</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Loading state during payment processing (3 seconds)</li>
+                        <li><input type="checkbox"> "Payment Successful!" message</li>
+                        <li><input type="checkbox"> Payment amount ($50.00) displayed</li>
+                        <li><input type="checkbox"> Recipient (john@example.com) displayed</li>
+                        <li><input type="checkbox"> Transaction ID shown</li>
+                        <li><input type="checkbox"> "Back to Dashboard" button</li>
+                    </ul>
+                </div>
+                <p><strong>Action:</strong> Click "Back to Dashboard"</p>
+            </div>
+            
+            <div class="test-step">
+                <h3>Step 6: Updated Dashboard</h3>
+                <p>Return to dashboard with updated balance</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Loading state during navigation (3 seconds)</li>
+                        <li><input type="checkbox"> Updated account balance ($1,184.56)</li>
+                        <li><input type="checkbox"> New transaction in recent transactions</li>
+                        <li><input type="checkbox"> All dashboard elements still functional</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔄 Test Flow 2: Navigation Between All Screens</h2>
+            <p><strong>Objective:</strong> Test navigation to all screens with proper loading states</p>
+            
+            <div class="test-step">
+                <h3>Transaction History Navigation</h3>
+                <p><strong>Action:</strong> From dashboard, click "View All" to see transaction history</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Loading message "Loading transactions..." (3 seconds)</li>
+                        <li><input type="checkbox"> "Transaction History" heading</li>
+                        <li><input type="checkbox"> List of demo transactions</li>
+                        <li><input type="checkbox"> Transaction details (amounts, dates, descriptions)</li>
+                        <li><input type="checkbox"> Back button functional</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-step">
+                <h3>Profile Screen Navigation</h3>
+                <p><strong>Action:</strong> Navigate to Profile & Settings</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Loading message "Loading profile..." (3 seconds)</li>
+                        <li><input type="checkbox"> "Profile" heading</li>
+                        <li><input type="checkbox"> User information displayed</li>
+                        <li><input type="checkbox"> Settings sections</li>
+                        <li><input type="checkbox"> Help and support links</li>
+                        <li><input type="checkbox"> Back button functional</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-step">
+                <h3>Back Navigation Test</h3>
+                <p><strong>Action:</strong> Use back buttons to navigate through screens</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Back navigation shows loading states (3 seconds each)</li>
+                        <li><input type="checkbox"> Navigation history maintained correctly</li>
+                        <li><input type="checkbox"> No broken navigation paths</li>
+                        <li><input type="checkbox"> Dashboard is accessible from all screens</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>⚠️ Test Flow 3: Error Handling</h2>
+            <p><strong>Objective:</strong> Test error scenarios and recovery</p>
+            
+            <div class="test-step">
+                <h3>Invalid Login Credentials</h3>
+                <p><strong>Action:</strong> Try logging in with wrong credentials</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Error message displayed</li>
+                        <li><input type="checkbox"> Form remains accessible for retry</li>
+                        <li><input type="checkbox"> No navigation occurs on error</li>
+                        <li><input type="checkbox"> Can successfully login after correction</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-step">
+                <h3>Invalid Route Handling</h3>
+                <p><strong>Action:</strong> Manually navigate to invalid URL (add /invalid to current URL)</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> "Page Not Found" screen displayed</li>
+                        <li><input type="checkbox"> Attempted path shown</li>
+                        <li><input type="checkbox"> Auto-redirect countdown visible</li>
+                        <li><input type="checkbox"> Navigation buttons available</li>
+                        <li><input type="checkbox"> Emergency reload option present</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-step">
+                <h3>Payment Error Scenarios</h3>
+                <p><strong>Action:</strong> Try payment with insufficient funds or invalid recipient</p>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Appropriate error messages shown</li>
+                        <li><input type="checkbox"> Form validation works</li>
+                        <li><input type="checkbox"> Can retry after error</li>
+                        <li><input type="checkbox"> No partial state corruption</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📱 Test Flow 4: Mobile Responsiveness</h2>
+            <p><strong>Objective:</strong> Verify mobile-optimized interface</p>
+            
+            <div class="test-step">
+                <h3>Mobile Viewport</h3>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> App maintains mobile dimensions</li>
+                        <li><input type="checkbox"> Touch targets are appropriately sized (44px minimum)</li>
+                        <li><input type="checkbox"> Text is readable without zooming</li>
+                        <li><input type="checkbox"> No horizontal scrolling required</li>
+                        <li><input type="checkbox"> Buttons and inputs are touch-friendly</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="test-step">
+                <h3>Loading States</h3>
+                <div class="expected">
+                    <strong>Expected:</strong>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> All loading states last exactly 3 seconds</li>
+                        <li><input type="checkbox"> Loading animations are smooth</li>
+                        <li><input type="checkbox"> Interactions blocked during loading</li>
+                        <li><input type="checkbox"> Loading messages are clear and helpful</li>
+                        <li><input type="checkbox"> Visual feedback is consistent</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>✅ Test Completion Summary</h2>
+            <div id="testSummary">
+                <p>Complete all test flows above and check off each item. The summary will update automatically.</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <p id="progressText">Progress: 0% (0/0 items completed)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let appStarted = false;
+        
+        function startApp() {
+            const iframe = document.getElementById('appIframe');
+            const appFrame = document.getElementById('appFrame');
+            const status = document.getElementById('status');
+            const startBtn = document.getElementById('startBtn');
+            
+            if (!appStarted) {
+                iframe.src = 'http://localhost:5173';
+                appFrame.style.display = 'block';
+                status.className = 'status success';
+                status.textContent = '✅ App started! Begin testing with the checklist below.';
+                startBtn.textContent = 'Restart App';
+                appStarted = true;
+            } else {
+                iframe.src = iframe.src; // Reload
+                status.textContent = '🔄 App restarted! Ready for testing.';
+            }
+        }
+        
+        function resetTest() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            updateProgress();
+            
+            const status = document.getElementById('status');
+            status.className = 'status pending';
+            status.textContent = 'Test reset - Ready to begin testing again';
+        }
+        
+        function toggleFullscreen() {
+            const appFrame = document.getElementById('appFrame');
+            if (appFrame.style.position === 'fixed') {
+                // Exit fullscreen
+                appFrame.style.position = 'static';
+                appFrame.style.top = 'auto';
+                appFrame.style.left = 'auto';
+                appFrame.style.width = '375px';
+                appFrame.style.height = '667px';
+                appFrame.style.zIndex = 'auto';
+                appFrame.style.margin = '20px auto';
+            } else {
+                // Enter fullscreen
+                appFrame.style.position = 'fixed';
+                appFrame.style.top = '0';
+                appFrame.style.left = '50%';
+                appFrame.style.transform = 'translateX(-50%)';
+                appFrame.style.width = '375px';
+                appFrame.style.height = '100vh';
+                appFrame.style.zIndex = '9999';
+                appFrame.style.margin = '0';
+            }
+        }
+        
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const total = checkboxes.length;
+            const completed = checkedBoxes.length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `Progress: ${percentage}% (${completed}/${total} items completed)`;
+            
+            if (percentage === 100) {
+                const status = document.getElementById('status');
+                status.className = 'status success';
+                status.textContent = '🎉 All tests completed! JuPay Demo is fully functional.';
+            }
+        }
+        
+        // Add event listeners to all checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+            updateProgress(); // Initial update
+        });
+        
+        // Auto-refresh iframe every 30 seconds to keep connection alive
+        setInterval(() => {
+            if (appStarted) {
+                const iframe = document.getElementById('appIframe');
+                if (iframe.src && !iframe.src.includes('about:blank')) {
+                    // Ping the iframe to keep it alive
+                    try {
+                        iframe.contentWindow.postMessage('ping', '*');
+                    } catch (e) {
+                        // Ignore cross-origin errors
+                    }
+                }
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

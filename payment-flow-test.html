@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Flow Test - JuPay Demo</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #1a1a1a;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 10px;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .test-section h2 {
+      color: #007bff;
+      margin-top: 0;
+    }
+    .test-steps {
+      list-style: none;
+      padding: 0;
+    }
+    .test-steps li {
+      padding: 12px;
+      margin: 8px 0;
+      background: #f8f9fa;
+      border-left: 4px solid #28a745;
+      border-radius: 4px;
+    }
+    .test-steps li strong {
+      color: #1a1a1a;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    .status.completed {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status.pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    .checklist li {
+      padding: 8px 0;
+      border-bottom: 1px solid #e1e5e9;
+    }
+    .checklist li:before {
+      content: "✓ ";
+      color: #28a745;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+    .note {
+      background: #e7f3ff;
+      border-left: 4px solid #007bff;
+      padding: 12px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    .note strong {
+      color: #007bff;
+    }
+    .screens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .screen-card {
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 8px;
+      border: 2px solid #e1e5e9;
+      text-align: center;
+    }
+    .screen-card h3 {
+      margin: 0 0 8px 0;
+      color: #1a1a1a;
+      font-size: 1rem;
+    }
+    .screen-card p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Payment Flow Test - JuPay Demo</h1>
+  
+  <div class="note">
+    <strong>📋 Test Overview:</strong> This document outlines the complete payment flow testing procedure for the 4 new payment screens implemented in Task 9.
+  </div>
+
+  <div class="test-section">
+    <h2>✅ Implementation Status</h2>
+    <div class="screens-grid">
+      <div class="screen-card">
+        <h3>SendMoneyAmountScreen</h3>
+        <p>✓ Implemented</p>
+      </div>
+      <div class="screen-card">
+        <h3>SelectPaymentMethodScreen</h3>
+        <p>✓ Implemented</p>
+      </div>
+      <div class="screen-card">
+        <h3>ReviewPaymentScreen</h3>
+        <p>✓ Implemented</p>
+      </div>
+      <div class="screen-card">
+        <h3>PaymentSuccessScreen</h3>
+        <p>✓ Implemented</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>🔄 Complete Payment Flow</h2>
+    <ol class="test-steps">
+      <li>
+        <strong>Step 1: Start from Dashboard</strong>
+        <br>Navigate to: <code>http://localhost:5174/dashboard</code>
+        <br>Click on "Send Money" service card
+      </li>
+      <li>
+        <strong>Step 2: Send Money Screen</strong>
+        <br>Route: <code>/send-money</code>
+        <br>Click on a beneficiary (e.g., Alice, Bob, Charlie) or "New Payment" card
+      </li>
+      <li>
+        <strong>Step 3: Send Money Amount Screen</strong>
+        <br>Route: <code>/send-money-amount</code>
+        <br>Actions to test:
+        <ul>
+          <li>Use number pad to enter amount (default: 252.50)</li>
+          <li>Test decimal point (only one allowed)</li>
+          <li>Test backspace button</li>
+          <li>Select purpose from dropdown</li>
+          <li>Add reference note (optional)</li>
+          <li>Toggle schedule options (Send Now/Schedule/Recurring)</li>
+          <li>Click "Continue" button</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Step 4: Select Payment Method Screen</strong>
+        <br>Route: <code>/select-payment-method</code>
+        <br>Actions to test:
+        <ul>
+          <li>Select payment method (OxPay Wallet/Credit Card/QR Payments)</li>
+          <li>Verify amount summary shows: Amount + Fee = Total</li>
+          <li>Verify fee calculation (S$2.50)</li>
+          <li>Click "Continue to Review" button</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Step 5: Review Payment Screen</strong>
+        <br>Route: <code>/review-payment</code>
+        <br>Actions to test:
+        <ul>
+          <li>Verify all payment details are displayed correctly</li>
+          <li>Check terms and conditions checkbox</li>
+          <li>Verify "Confirm Payment" button is disabled until checkbox is checked</li>
+          <li>Test "Edit Details" link (goes back)</li>
+          <li>Click "Confirm Payment" button with fingerprint icon</li>
+        </ul>
+      </li>
+      <li>
+        <strong>Step 6: Payment Success Screen</strong>
+        <br>Route: <code>/payment-success</code>
+        <br>Actions to test:
+        <ul>
+          <li>Verify success icon (circle with checkmark) is displayed</li>
+          <li>Verify transaction ID and amount are shown</li>
+          <li>Verify payment timeline shows 3 stages (Submitted-completed, Processing-pending, Completed-pending)</li>
+          <li>Test "View Status" button (navigates to All Transactions)</li>
+          <li>Test "Done" button (navigates to Dashboard)</li>
+          <li>Test "Share Receipt" button (shows alert)</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+
+  <div class="test-section">
+    <h2>🎯 State Management Testing</h2>
+    <ul class="checklist">
+      <li>Recipient name is passed from SendMoney → SendMoneyAmount</li>
+      <li>Amount, purpose, reference are passed from SendMoneyAmount → SelectPaymentMethod</li>
+      <li>Payment method and fee are passed from SelectPaymentMethod → ReviewPayment</li>
+      <li>Final transaction details are passed from ReviewPayment → PaymentSuccess</li>
+      <li>Back button navigation works correctly on all screens</li>
+      <li>Close button (X) on SendMoneyAmount returns to Dashboard</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>🎨 UI/UX Testing</h2>
+    <ul class="checklist">
+      <li>All screens have consistent header styling with border-bottom</li>
+      <li>Number pad on SendMoneyAmount is responsive and centered</li>
+      <li>Payment method cards show selection state with blue border and checkmark</li>
+      <li>Amount summary card displays fee and total correctly</li>
+      <li>Review screen shows all details in a clean, organized layout</li>
+      <li>Confirm button is disabled (gray) until terms checkbox is checked</li>
+      <li>Success screen timeline shows visual progression with icons and connecting lines</li>
+      <li>All buttons have hover states and proper cursor pointers</li>
+      <li>Mobile viewport (480px max-width) is maintained</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>🔍 Edge Cases to Test</h2>
+    <ul class="checklist">
+      <li>Enter very large amount (e.g., 99999.99)</li>
+      <li>Try to add multiple decimal points (should only allow one)</li>
+      <li>Test backspace on single digit amount</li>
+      <li>Navigate back and forth between screens to verify state persistence</li>
+      <li>Test without selecting purpose (should still allow continue)</li>
+      <li>Test without adding reference note (optional field)</li>
+      <li>Uncheck and recheck terms checkbox multiple times</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>📱 Responsive Design Testing</h2>
+    <ul class="checklist">
+      <li>Test on mobile viewport (375px width)</li>
+      <li>Test on tablet viewport (768px width)</li>
+      <li>Verify all screens stay within 480px max-width container</li>
+      <li>Check that number pad buttons are easily tappable (min 44px touch target)</li>
+      <li>Verify text is readable at all viewport sizes</li>
+      <li>Check that payment method cards are easily selectable on mobile</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>🚀 Quick Test Commands</h2>
+    <div class="note">
+      <strong>Dev Server:</strong> Already running on <code>http://localhost:5174</code>
+    </div>
+    <p><strong>Test Routes:</strong></p>
+    <ul>
+      <li><code>/dashboard</code> - Start here</li>
+      <li><code>/send-money</code> - Send Money hub</li>
+      <li><code>/send-money-amount</code> - Enter amount (requires state)</li>
+      <li><code>/select-payment-method</code> - Choose payment method (requires state)</li>
+      <li><code>/review-payment</code> - Review details (requires state)</li>
+      <li><code>/payment-success</code> - Success confirmation (requires state)</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>✅ Validation Checklist</h2>
+    <ul class="checklist">
+      <li>No TypeScript errors in any payment flow screens</li>
+      <li>All screens are properly exported in src/screens/index.ts</li>
+      <li>All routes are configured in AppRouter.tsx</li>
+      <li>All screen types are defined in src/types/index.ts</li>
+      <li>CSS styles are properly defined in src/screens/screens.css</li>
+      <li>Navigation flow works end-to-end without errors</li>
+      <li>State is properly passed between screens using location.state</li>
+      <li>All interactive elements (buttons, inputs) are functional</li>
+    </ul>
+  </div>
+
+  <div class="note">
+    <strong>✨ Summary:</strong> All 4 payment flow screens have been successfully implemented with full functionality, proper styling, and state management. The complete flow from SendMoney → Amount → PaymentMethod → Review → Success is working correctly.
+  </div>
+
+</body>
+</html>

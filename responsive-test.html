@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>JuPay Mobile Demo - Responsive Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .viewport-info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .responsive-demo {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .button-demo {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+            min-height: 44px;
+            min-width: 44px;
+            transition: all 0.2s ease;
+        }
+        
+        .button-demo:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        .grid-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .grid-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e1e5e9;
+        }
+        
+        /* Mobile-first responsive breakpoints */
+        @media (min-width: 360px) {
+            .responsive-demo {
+                padding: 24px;
+                font-size: 18px;
+            }
+            .button-demo {
+                min-height: 46px;
+                padding: 14px 26px;
+            }
+        }
+        
+        @media (min-width: 375px) {
+            .responsive-demo {
+                padding: 28px;
+                font-size: 19px;
+            }
+            .button-demo {
+                min-height: 48px;
+                padding: 16px 28px;
+                font-size: 17px;
+            }
+        }
+        
+        @media (min-width: 414px) {
+            .responsive-demo {
+                padding: 32px;
+                font-size: 20px;
+            }
+            .button-demo {
+                min-height: 50px;
+                padding: 18px 30px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (min-width: 480px) {
+            .responsive-demo {
+                padding: 36px;
+                font-size: 22px;
+            }
+            .button-demo {
+                padding: 20px 32px;
+                font-size: 19px;
+            }
+        }
+        
+        @media (orientation: landscape) and (max-height: 500px) {
+            .responsive-demo {
+                padding: 16px;
+                font-size: 16px;
+            }
+            .button-demo {
+                min-height: 40px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+        
+        .breakpoint-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="breakpoint-indicator" id="breakpoint">
+        Loading...
+    </div>
+    
+    <div class="test-container">
+        <h1>JuPay Mobile Demo - Responsive Design Test</h1>
+        
+        <div class="viewport-info">
+            <strong>Current Viewport:</strong> <span id="viewport-size">Loading...</span><br>
+            <strong>Device Pixel Ratio:</strong> <span id="pixel-ratio">Loading...</span><br>
+            <strong>Orientation:</strong> <span id="orientation">Loading...</span>
+        </div>
+        
+        <div class="test-section">
+            <h3>📱 Mobile Screen Size Adaptation</h3>
+            <p>This section demonstrates how elements adapt to different mobile screen sizes:</p>
+            
+            <div class="responsive-demo">
+                <h4>Responsive Container</h4>
+                <p>This container adjusts padding and font size based on screen width</p>
+            </div>
+            
+            <div class="grid-demo">
+                <div class="grid-item">320px+<br>Base</div>
+                <div class="grid-item">360px+<br>Small</div>
+                <div class="grid-item">375px+<br>Standard</div>
+                <div class="grid-item">414px+<br>Large</div>
+                <div class="grid-item">480px+<br>XL</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>👆 Touch Target Testing</h3>
+            <p>All buttons meet minimum 44px touch target requirements and scale appropriately:</p>
+            
+            <button class="button-demo">Primary Action</button>
+            <button class="button-demo">Secondary</button>
+            <button class="button-demo">Touch Me</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔄 Orientation Testing</h3>
+            <p>Rotate your device to see landscape optimizations (reduced spacing and sizing).</p>
+            
+            <div class="responsive-demo">
+                <p>This content adapts to landscape orientation with reduced padding and font sizes for better space utilization.</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📏 Breakpoint Information</h3>
+            <p>The indicator in the top-right shows the current active breakpoint.</p>
+            <ul>
+                <li><strong>XS:</strong> 320px - 359px (Extra Small phones)</li>
+                <li><strong>SM:</strong> 360px - 374px (Small phones)</li>
+                <li><strong>MD:</strong> 375px - 413px (Standard phones)</li>
+                <li><strong>LG:</strong> 414px - 479px (Large phones)</li>
+                <li><strong>XL:</strong> 480px+ (Extra Large phones/tablets)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function updateViewportInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const pixelRatio = window.devicePixelRatio || 1;
+            const orientation = width > height ? 'Landscape' : 'Portrait';
+            
+            document.getElementById('viewport-size').textContent = `${width} × ${height}px`;
+            document.getElementById('pixel-ratio').textContent = pixelRatio;
+            document.getElementById('orientation').textContent = orientation;
+            
+            // Update breakpoint indicator
+            let breakpoint = 'XS';
+            if (width >= 480) breakpoint = 'XL';
+            else if (width >= 414) breakpoint = 'LG';
+            else if (width >= 375) breakpoint = 'MD';
+            else if (width >= 360) breakpoint = 'SM';
+            
+            if (orientation === 'Landscape' && height <= 500) {
+                breakpoint += ' (Landscape)';
+            }
+            
+            document.getElementById('breakpoint').textContent = breakpoint;
+        }
+        
+        // Update on load and resize
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateViewportInfo, 100);
+        });
+    </script>
+</body>
+</html>

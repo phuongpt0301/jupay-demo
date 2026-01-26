@@ -1,0 +1,65 @@
+/* Bottom Navigation Styles */
+.bottom-navigation {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: white;
+  border-top: 1px solid #e1e5e9;
+  padding: 0.5rem 0;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  color: #999;
+  transition: color 0.2s ease;
+  min-width: 60px;
+  flex: 1;
+}
+
+.nav-item:hover {
+  color: #666;
+}
+
+.nav-item.active {
+  color: #1a1a1a;
+}
+
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-item span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Add padding to screens with bottom nav */
+.screen-with-bottom-nav {
+  padding-bottom: 80px;
+}
+
+@media (max-width: 480px) {
+  .nav-item {
+    padding: 0.5rem 0.5rem;
+    min-width: 50px;
+  }
+  
+  .nav-item span {
+    font-size: 0.6875rem;
+  }
+}

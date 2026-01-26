@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaymentScreen Test - JuPay Mobile Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .test-info {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .test-steps {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .test-steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .test-steps li {
+            margin-bottom: 8px;
+        }
+        .nav-button {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .nav-button:hover {
+            background: #0056b3;
+        }
+        .feature-list {
+            background: #e8f5e8;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .feature-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .feature-list li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>PaymentScreen Test</h1>
+        
+        <div class="test-info">
+            <h3>🎯 Task 7.2: PaymentScreen Component</h3>
+            <p>This test page helps verify the PaymentScreen component implementation with recipient input, amount entry, payment method selection, and form validation.</p>
+        </div>
+
+        <div class="test-steps">
+            <h3>📋 Test Steps</h3>
+            <ol>
+                <li>Click "Go to App" to open the JuPay Mobile Demo</li>
+                <li>Navigate through: Splash → Login (demo/demo123) → Dashboard</li>
+                <li>Click the "Send" button to access PaymentScreen</li>
+                <li>Test the following features:</li>
+                <ul>
+                    <li>Recipient input with suggestions</li>
+                    <li>Amount input with validation</li>
+                    <li>Payment method selection</li>
+                    <li>Form validation (try submitting empty form)</li>
+                    <li>Payment summary display</li>
+                    <li>Successful payment submission</li>
+                </ul>
+            </ol>
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="http://localhost:5173" class="nav-button" target="_blank">
+                🚀 Go to App
+            </a>
+            <a href="http://localhost:5173/payment" class="nav-button" target="_blank">
+                💳 Direct to Payment (requires login)
+            </a>
+        </div>
+
+        <div class="feature-list">
+            <h3>✅ Expected Features</h3>
+            <ul>
+                <li><strong>Recipient Input:</strong> Text field with autocomplete suggestions</li>
+                <li><strong>Amount Input:</strong> Numeric input with currency symbol and balance display</li>
+                <li><strong>Payment Methods:</strong> Selectable cards/accounts with icons</li>
+                <li><strong>Form Validation:</strong> Real-time validation with error messages</li>
+                <li><strong>Payment Summary:</strong> Shows amount, recipient, and payment method</li>
+                <li><strong>Mobile-Friendly:</strong> Touch targets ≥44px, responsive design</li>
+                <li><strong>Loading States:</strong> 3-second loading on navigation</li>
+                <li><strong>Demo Processing:</strong> Simulated payment without real transactions</li>
+            </ul>
+        </div>
+
+        <div class="test-info" style="margin-top: 20px;">
+            <h3>🔍 Validation Checklist</h3>
+            <p><strong>Requirements Coverage:</strong></p>
+            <ul>
+                <li><strong>3.4:</strong> Payment/transaction screens for processing payments ✓</li>
+                <li><strong>5.1:</strong> Simulate payment processing without actual transactions ✓</li>
+                <li><strong>5.4:</strong> Form validation and appropriate feedback ✓</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

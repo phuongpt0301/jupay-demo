@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Integration Test - JuPay Mobile Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-step {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+            background-color: #f8f9fa;
+        }
+        .success {
+            border-left-color: #28a745;
+            background-color: #d4edda;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .balance {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Payment Integration Test</h1>
+        <p>This test verifies that payment processing correctly integrates with the app state.</p>
+        
+        <div id="test-results"></div>
+        
+        <button onclick="runPaymentIntegrationTest()">Run Payment Integration Test</button>
+        <button onclick="window.location.href='/'">Back to App</button>
+    </div>
+
+    <script type="module">
+        import { demoDataService } from '/src/services/demoDataService.ts';
+
+        window.demoDataService = demoDataService;
+
+        window.runPaymentIntegrationTest = async function() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '<div class="test-step">Starting payment integration test...</div>';
+
+            try {
+                // Step 1: Get initial balance
+                const initialBalance = demoDataService.getAccountBalance();
+                resultsDiv.innerHTML += `<div class="test-step">Initial balance: $${initialBalance.toFixed(2)}</div>`;
+
+                // Step 2: Get initial transaction count
+                const initialTransactions = demoDataService.getDemoTransactions();
+                const initialCount = initialTransactions.length;
+                resultsDiv.innerHTML += `<div class="test-step">Initial transaction count: ${initialCount}</div>`;
+
+                // Step 3: Create a test payment request
+                const paymentRequest = {
+                    recipient: 'Test Recipient',
+                    amount: 25.00,
+                    currency: 'USD',
+                    description: 'Integration test payment',
+                    paymentMethod: {
+                        id: 'pm_001',
+                        type: 'bank_account',
+                        displayName: 'Test Account',
+                        isDefault: true
+                    }
+                };
+
+                resultsDiv.innerHTML += `<div class="test-step">Processing payment of $${paymentRequest.amount.toFixed(2)} to ${paymentRequest.recipient}...</div>`;
+
+                // Step 4: Process the payment
+                const confirmation = await demoDataService.processPayment(paymentRequest);
+                
+                if (confirmation.status === 'success') {
+                    resultsDiv.innerHTML += `<div class="test-step success">✅ Payment successful! Transaction ID: ${confirmation.transactionId}</div>`;
+                    
+                    // Step 5: Verify balance was updated
+                    const newBalance = demoDataService.getAccountBalance();
+                    const expectedBalance = initialBalance - paymentRequest.amount;
+                    
+                    if (Math.abs(newBalance - expectedBalance) < 0.01) {
+                        resultsDiv.innerHTML += `<div class="test-step success">✅ Balance correctly updated: $${newBalance.toFixed(2)} (reduced by $${paymentRequest.amount.toFixed(2)})</div>`;
+                    } else {
+                        resultsDiv.innerHTML += `<div class="test-step error">❌ Balance update failed. Expected: $${expectedBalance.toFixed(2)}, Got: $${newBalance.toFixed(2)}</div>`;
+                    }
+                    
+                    // Step 6: Verify transaction was added
+                    const newTransactions = demoDataService.getDemoTransactions();
+                    const newCount = newTransactions.length;
+                    
+                    if (newCount === initialCount + 1) {
+                        resultsDiv.innerHTML += `<div class="test-step success">✅ Transaction added to history (count: ${newCount})</div>`;
+                        
+                        // Verify the transaction details
+                        const latestTransaction = newTransactions[0];
+                        if (latestTransaction.id === confirmation.transactionId && 
+                            latestTransaction.amount === paymentRequest.amount &&
+                            latestTransaction.recipient === paymentRequest.recipient &&
+                            latestTransaction.status === 'completed') {
+                            resultsDiv.innerHTML += `<div class="test-step success">✅ Transaction details are correct</div>`;
+                        } else {
+                            resultsDiv.innerHTML += `<div class="test-step error">❌ Transaction details are incorrect</div>`;
+                        }
+                    } else {
+                        resultsDiv.innerHTML += `<div class="test-step error">❌ Transaction not added to history. Expected count: ${initialCount + 1}, Got: ${newCount}</div>`;
+                    }
+                    
+                } else {
+                    resultsDiv.innerHTML += `<div class="test-step error">❌ Payment failed: ${confirmation.message}</div>`;
+                    
+                    // For failed payments, verify transaction was still added but balance wasn't changed
+                    const newBalance = demoDataService.getAccountBalance();
+                    const newTransactions = demoDataService.getDemoTransactions();
+                    
+                    if (Math.abs(newBalance - initialBalance) < 0.01) {
+                        resultsDiv.innerHTML += `<div class="test-step success">✅ Balance correctly unchanged for failed payment: $${newBalance.toFixed(2)}</div>`;
+                    } else {
+                        resultsDiv.innerHTML += `<div class="test-step error">❌ Balance incorrectly changed for failed payment</div>`;
+                    }
+                    
+                    if (newTransactions.length === initialCount + 1) {
+                        const latestTransaction = newTransactions[0];
+                        if (latestTransaction.status === 'failed') {
+                            resultsDiv.innerHTML += `<div class="test-step success">✅ Failed transaction correctly added to history</div>`;
+                        } else {
+                            resultsDiv.innerHTML += `<div class="test-step error">❌ Failed transaction has wrong status: ${latestTransaction.status}</div>`;
+                        }
+                    } else {
+                        resultsDiv.innerHTML += `<div class="test-step error">❌ Failed transaction not added to history</div>`;
+                    }
+                }
+
+                resultsDiv.innerHTML += `<div class="test-step success">✅ Payment integration test completed!</div>`;
+
+            } catch (error) {
+                resultsDiv.innerHTML += `<div class="test-step error">❌ Test failed with error: ${error.message}</div>`;
+                console.error('Payment integration test error:', error);
+            }
+        };
+    </script>
+</body>
+</html>

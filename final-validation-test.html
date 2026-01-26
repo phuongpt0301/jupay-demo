@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JuPay Mobile Demo - Final Validation Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        .app-frame {
+            width: 375px;
+            height: 667px;
+            border: 2px solid #333;
+            border-radius: 20px;
+            margin: 20px auto;
+            overflow: hidden;
+            background: white;
+            position: relative;
+        }
+        .app-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .test-checklist {
+            margin-top: 20px;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .test-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        .test-category {
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .status-pass { background: #4caf50; }
+        .status-fail { background: #f44336; }
+        .status-pending { background: #ff9800; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🚀 JuPay Mobile Demo - Final Validation Test</h1>
+        
+        <div class="instructions">
+            <h3>📋 Test Instructions</h3>
+            <p>This is the final checkpoint for the JuPay Mobile Demo. Test the complete application by following the checklist below. The app should be running at <strong>http://localhost:5173</strong></p>
+            <p><strong>Demo Credentials:</strong> Username: <code>demo</code>, Password: <code>password</code></p>
+        </div>
+
+        <div class="app-frame">
+            <iframe src="http://localhost:5173" title="JuPay Mobile Demo"></iframe>
+        </div>
+
+        <div class="test-checklist">
+            <div class="test-category">🎯 Core User Journey Testing</div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="splash-screen">
+                <label for="splash-screen">
+                    <span class="status-indicator status-pending"></span>
+                    Splash screen displays JuPay branding and auto-navigates to login
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="login-form">
+                <label for="login-form">
+                    <span class="status-indicator status-pending"></span>
+                    Login form accepts demo credentials (demo/password) with 3-second loading
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="dashboard-display">
+                <label for="dashboard-display">
+                    <span class="status-indicator status-pending"></span>
+                    Dashboard displays account balance and quick action buttons
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="payment-flow">
+                <label for="payment-flow">
+                    <span class="status-indicator status-pending"></span>
+                    Payment flow: Dashboard → Payment Screen → Confirmation → Back to Dashboard
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="transaction-history">
+                <label for="transaction-history">
+                    <span class="status-indicator status-pending"></span>
+                    Transaction history displays demo transactions with proper formatting
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="profile-screen">
+                <label for="profile-screen">
+                    <span class="status-indicator status-pending"></span>
+                    Profile screen displays user information and settings options
+                </label>
+            </div>
+
+            <div class="test-category">📱 Mobile Responsiveness & Touch Interactions</div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="mobile-viewport">
+                <label for="mobile-viewport">
+                    <span class="status-indicator status-pending"></span>
+                    App maintains mobile viewport (375px width) on desktop
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="touch-targets">
+                <label for="touch-targets">
+                    <span class="status-indicator status-pending"></span>
+                    All buttons and interactive elements are touch-friendly (44px minimum)
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="responsive-layout">
+                <label for="responsive-layout">
+                    <span class="status-indicator status-pending"></span>
+                    Layout adapts properly to different mobile screen sizes
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="scroll-behavior">
+                <label for="scroll-behavior">
+                    <span class="status-indicator status-pending"></span>
+                    Scrolling works smoothly on transaction history and long content
+                </label>
+            </div>
+
+            <div class="test-category">⏱️ Loading States & Transitions</div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="loading-timing">
+                <label for="loading-timing">
+                    <span class="status-indicator status-pending"></span>
+                    All loading states display for exactly 3 seconds
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="loading-blocking">
+                <label for="loading-blocking">
+                    <span class="status-indicator status-pending"></span>
+                    User interactions are blocked during loading states
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="loading-visual">
+                <label for="loading-visual">
+                    <span class="status-indicator status-pending"></span>
+                    Loading animations are consistent and provide clear visual feedback
+                </label>
+            </div>
+
+            <div class="test-category">🔄 Navigation & Error Handling</div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="navigation-flow">
+                <label for="navigation-flow">
+                    <span class="status-indicator status-pending"></span>
+                    Navigation between all screens works logically and consistently
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="back-navigation">
+                <label for="back-navigation">
+                    <span class="status-indicator status-pending"></span>
+                    Back navigation works properly and maintains history
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="error-boundaries">
+                <label for="error-boundaries">
+                    <span class="status-indicator status-pending"></span>
+                    Error boundaries handle errors gracefully without crashing the app
+                </label>
+            </div>
+
+            <div class="test-category">💳 Demo Functionality</div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="demo-payments">
+                <label for="demo-payments">
+                    <span class="status-indicator status-pending"></span>
+                    Payment processing simulates successfully without external API calls
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="demo-data">
+                <label for="demo-data">
+                    <span class="status-indicator status-pending"></span>
+                    All screens populate with realistic demo data
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="form-validation">
+                <label for="form-validation">
+                    <span class="status-indicator status-pending"></span>
+                    Form validation provides appropriate feedback for valid/invalid inputs
+                </label>
+            </div>
+
+            <div class="test-category">🎨 Visual Design & Consistency</div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="visual-consistency">
+                <label for="visual-consistency">
+                    <span class="status-indicator status-pending"></span>
+                    Visual styling is consistent across all screens (colors, typography, spacing)
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="mobile-design">
+                <label for="mobile-design">
+                    <span class="status-indicator status-pending"></span>
+                    Design follows mobile-first principles and looks professional
+                </label>
+            </div>
+            
+            <div class="test-item">
+                <input type="checkbox" id="accessibility">
+                <label for="accessibility">
+                    <span class="status-indicator status-pending"></span>
+                    Basic accessibility features work (ARIA labels, keyboard navigation)
+                </label>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <h3>📊 Test Results Summary</h3>
+            <p id="test-summary">Complete the checklist above to see results summary.</p>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="generateReport()" style="background: #2196f3; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
+                    Generate Test Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update status indicators when checkboxes are clicked
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const indicator = this.parentElement.querySelector('.status-indicator');
+                if (this.checked) {
+                    indicator.className = 'status-indicator status-pass';
+                } else {
+                    indicator.className = 'status-indicator status-pending';
+                }
+                updateSummary();
+            });
+        });
+
+        function updateSummary() {
+            const total = document.querySelectorAll('input[type="checkbox"]').length;
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            document.getElementById('test-summary').innerHTML = 
+                `Progress: ${checked}/${total} tests completed (${percentage}%)`;
+        }
+
+        function generateReport() {
+            const categories = {};
+            document.querySelectorAll('.test-category').forEach(category => {
+                const categoryName = category.textContent;
+                let nextElement = category.nextElementSibling;
+                let passed = 0;
+                let total = 0;
+                
+                while (nextElement && nextElement.classList.contains('test-item')) {
+                    total++;
+                    if (nextElement.querySelector('input[type="checkbox"]').checked) {
+                        passed++;
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                }
+                
+                categories[categoryName] = { passed, total };
+            });
+
+            let report = "JuPay Mobile Demo - Final Validation Report\\n";
+            report += "=" .repeat(50) + "\\n\\n";
+            
+            for (const [category, results] in Object.entries(categories)) {
+                const percentage = Math.round((results.passed / results.total) * 100);
+                report += `${category}: ${results.passed}/${results.total} (${percentage}%)\\n`;
+            }
+            
+            const totalPassed = Object.values(categories).reduce((sum, cat) => sum + cat.passed, 0);
+            const totalTests = Object.values(categories).reduce((sum, cat) => sum + cat.total, 0);
+            const overallPercentage = Math.round((totalPassed / totalTests) * 100);
+            
+            report += "\\n" + "=" .repeat(50) + "\\n";
+            report += `OVERALL: ${totalPassed}/${totalTests} tests passed (${overallPercentage}%)\\n`;
+            
+            if (overallPercentage >= 90) {
+                report += "\\n✅ EXCELLENT - App is ready for demo!";
+            } else if (overallPercentage >= 75) {
+                report += "\\n⚠️  GOOD - Minor issues to address";
+            } else {
+                report += "\\n❌ NEEDS WORK - Significant issues found";
+            }
+            
+            alert(report);
+        }
+
+        // Initialize summary
+        updateSummary();
+    </script>
+</body>
+</html>
