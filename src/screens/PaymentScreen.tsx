@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 import { ScreenType, type PaymentRequest, type PaymentMethod } from '../types';
 import useNavigationWithLoading from '../hooks/useNavigationWithLoading';
 import { useAppState } from '../hooks/useAppState';
@@ -27,7 +28,7 @@ import './screens.css';
  */
 const PaymentScreen: React.FC = () => {
   const { navigateWithLoading } = useNavigationWithLoading();
-  const { user, paymentMethods, defaultPaymentMethod, addTransaction, updateUserBalance } = useAppState();
+  const { user, paymentMethods, defaultPaymentMethod } = useAppState();
   const { refreshUserData } = useAuth();
   
   // Form state
@@ -178,7 +179,7 @@ const PaymentScreen: React.FC = () => {
   /**
    * Handle form submission
    */
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
     if (isSubmitting) return;

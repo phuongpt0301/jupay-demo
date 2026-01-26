@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Pin Node for Vite/TS compatibility and consistent builds
+  NODE_VERSION = "20"
+  # Ensure devDependencies are installed (build needs vite/typescript/@types)
+  NPM_FLAGS = "--production=false"
+  NODE_ENV = "development"
+

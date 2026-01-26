@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './screens.css';
 
@@ -38,12 +38,6 @@ const SecuritySettingsScreen: React.FC = () => {
   const handleLogOutOtherDevices = () => {
     if (confirm('Are you sure you want to log out all other devices?')) {
       alert('Logged out from all other devices');
-    }
-  };
-
-  const handleRemoveSession = (sessionId: string) => {
-    if (confirm('Remove this session?')) {
-      alert(`Session ${sessionId} removed`);
     }
   };
 

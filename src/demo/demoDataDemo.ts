@@ -6,7 +6,7 @@
  */
 
 import { demoDataService } from '../services/demoDataService';
-import { PaymentRequest } from '../types/index';
+import type { PaymentRequest } from '../types';
 
 // Demo function to test the service
 export const runDemoDataDemo = async () => {

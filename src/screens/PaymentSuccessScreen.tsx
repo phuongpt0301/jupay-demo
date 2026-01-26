@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ScreenType } from '../types';
 import './screens.css';
@@ -10,7 +9,7 @@ import './screens.css';
 const PaymentSuccessScreen: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { recipient, amount, total } = location.state || {};
+  const { amount, total } = location.state || {};
   
   const transactionId = 'PAY-1234-5678';
 

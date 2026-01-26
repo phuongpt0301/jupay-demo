@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ScreenType } from '../types';
 import useNavigationWithLoading from '../hooks/useNavigationWithLoading';
 import { useAppContext, selectors } from '../context';
@@ -18,7 +18,6 @@ const NotFound: React.FC = () => {
   const { navigateWithLoading } = useNavigationWithLoading();
   const { state } = useAppContext();
   const location = useLocation();
-  const navigate = useNavigate();
   
   const isAuthenticated = selectors.isAuthenticated(state);
   

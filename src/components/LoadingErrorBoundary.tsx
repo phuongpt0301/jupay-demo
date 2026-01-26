@@ -1,4 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import { ScreenType } from '../types';
 import './LoadingErrorBoundary.css';
 
@@ -26,7 +27,7 @@ interface LoadingErrorBoundaryState {
  */
 class LoadingErrorBoundary extends Component<LoadingErrorBoundaryProps, LoadingErrorBoundaryState> {
   private maxRetries = 3;
-  private retryTimeout: NodeJS.Timeout | null = null;
+  private retryTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(props: LoadingErrorBoundaryProps) {
     super(props);
