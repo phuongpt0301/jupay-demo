@@ -9295,6 +9295,7 @@ kyc-compliance-content {
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease;
+  padding: 0;
 }
 
 .menu-close-btn:hover {
