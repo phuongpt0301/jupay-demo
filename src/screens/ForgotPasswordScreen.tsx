@@ -1,7 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+
+const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+});
+
+type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 /**
  * ForgotPasswordScreen Component
@@ -9,12 +21,19 @@ import './screens.css';
  */
 const ForgotPasswordScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
 
-  const handleSendResetLink = () => {
-    if (email.trim()) {
-      navigate(`/${ScreenType.FORGOT_PASSWORD_CODE}`);
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: 'onChange',
+  });
+
+  const onSubmit = (data: ForgotPasswordFormData) => {
+    console.log('Reset password for:', data.email);
+    navigate(`/${ScreenType.FORGOT_PASSWORD_CODE}`);
   };
 
   const handleBackToLogin = () => {
@@ -47,31 +66,37 @@ const ForgotPasswordScreen: React.FC = () => {
         </div>
 
         {/* Email Input */}
-        <div className="form-group-centered">
-          <label className="form-label-centered">Email Address</label>
-          <div className="email-input-wrapper-centered">
-            <svg className="email-icon-centered" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M22 6L12 13L2 6" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <input
-              type="email"
-              className="form-input-centered"
-              placeholder="your.email@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-group-centered">
+            <label className="form-label-centered">Email Address</label>
+            <div className="email-input-wrapper-centered">
+              <svg className="email-icon-centered" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M22 6L12 13L2 6" stroke="#666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <input
+                type="email"
+                className={`form-input-centered ${errors.email ? 'input-error' : ''}`}
+                placeholder="your.email@example.com"
+                {...register('email')}
+              />
+            </div>
+            {errors.email && (
+              <span className="error-message">{errors.email.message}</span>
+            )}
           </div>
-        </div>
 
-        {/* Send Reset Link Button */}
-        <button
-          className="send-reset-link-btn"
-          onClick={handleSendResetLink}
-          disabled={!email.trim()}
-        >
-          Send Reset Link
-        </button>
+          {/* Send Reset Link Button */}
+          <div className="reset-link-btn-container">
+            <button
+              type="submit"
+              className="send-reset-link-btn"
+              disabled={!isValid}
+            >
+              Send Reset Link
+            </button>
+          </div>
+        </form>
 
         {/* Back to Login Link */}
         <button className="back-to-login-link" onClick={handleBackToLogin}>

@@ -1,7 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+
+const newPasswordSchema = z.object({
+  newPassword: z
+    .string()
+    .min(1, 'Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character'),
+  confirmPassword: z
+    .string()
+    .min(1, 'Please confirm your password'),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: 'Passwords do not match',
+  path: ['confirmPassword'],
+});
+
+type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
 
 /**
  * ForgotPasswordNewScreen Component
@@ -9,25 +30,45 @@ import './screens.css';
  */
 const ForgotPasswordNewScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  // Password validation rules
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm<NewPasswordFormData>({
+    resolver: zodResolver(newPasswordSchema),
+    mode: 'onChange',
+  });
+
+  const newPassword = watch('newPassword', '');
+  const confirmPassword = watch('confirmPassword', '');
+
+  // Re-validate confirmPassword when newPassword changes
+  useEffect(() => {
+    if (confirmPassword) {
+      trigger('confirmPassword');
+    }
+  }, [newPassword, confirmPassword, trigger]);
+
+  // Password validation rules for UI display
   const hasMinLength = newPassword.length >= 8;
   const hasUppercase = /[A-Z]/.test(newPassword);
   const hasNumber = /[0-9]/.test(newPassword);
   const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
-  const passwordsMatch = newPassword === confirmPassword && confirmPassword !== '';
 
-  const isValid = hasMinLength && hasUppercase && hasNumber && hasSpecialChar && passwordsMatch;
+  const onSubmit = (data: NewPasswordFormData) => {
+    console.log('Reset password:', data);
+    setShowSuccessModal(true);
+  };
 
-  const handleResetPassword = () => {
-    if (isValid) {
-      alert('Password reset successful!');
-      navigate(`/${ScreenType.CREATE_ACCOUNT}`);
-    }
+  const handleModalClose = () => {
+    setShowSuccessModal(false);
+    navigate(`/${ScreenType.LOGIN}`);
   };
 
   const handleBack = () => {
@@ -50,16 +91,16 @@ const ForgotPasswordNewScreen: React.FC = () => {
 
         <div className="border" />
 
+        <form onSubmit={handleSubmit(onSubmit)}>
         {/* New Password Input */}
         <div className="form-group">
           <label className="form-label-new">New Password</label>
           <div className="password-input-wrapper">
             <input
               type={showNewPassword ? 'text' : 'password'}
-              className="form-input-new"
+              className={`form-input-new ${errors.newPassword ? 'input-error' : ''}`}
               placeholder="Enter your new password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              {...register('newPassword')}
             />
             <button
               type="button"
@@ -88,10 +129,9 @@ const ForgotPasswordNewScreen: React.FC = () => {
           <div className="password-input-wrapper">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
-              className="form-input-new"
+              className={`form-input-new ${errors.confirmPassword ? 'input-error' : ''}`}
               placeholder="Confirm your new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              {...register('confirmPassword')}
             />
             <button
               type="button"
@@ -106,6 +146,9 @@ const ForgotPasswordNewScreen: React.FC = () => {
 
             </button>
           </div>
+          {errors.confirmPassword && (
+            <span className="error-message">{errors.confirmPassword.message}</span>
+          )}
         </div>
 
         {/* Password Requirements */}
@@ -130,13 +173,33 @@ const ForgotPasswordNewScreen: React.FC = () => {
 
         {/* Reset Password Button */}
         <button
+          type="submit"
           className="reset-password-btn"
-          onClick={handleResetPassword}
           disabled={!isValid}
         >
           Reset Password
         </button>
+        </form>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="modal-overlay" onClick={handleModalClose}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon success">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#22c55e" strokeWidth="2" fill="#dcfce7" />
+                <path d="M8 12L11 15L16 9" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <h2 className="modal-title">Password Reset Successful!</h2>
+            <p className="modal-message">Your password has been reset successfully. You can now login with your new password.</p>
+            <button className="modal-btn" onClick={handleModalClose}>
+              Back to Login
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

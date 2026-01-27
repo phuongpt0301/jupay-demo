@@ -3182,10 +3182,14 @@
 }
 
 .error-message {
-  color: var(--color-error-text);
+  color: var(--color-error);
   font-size: var(--font-size-sm);
   margin-top: var(--space-1);
   line-height: var(--line-height-normal);
+}
+
+.input-error {
+  border-color: var(--color-error) !important;
 }
 
 .login-error {
@@ -4767,6 +4771,11 @@
   opacity: 0.5;
 }
 
+.login-btn-text:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .login-divider {
   display: flex;
   align-items: center;
@@ -6064,7 +6073,11 @@
   outline: none;
   border-color: #1a1a1a;
 }
-
+.reset-link-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .send-reset-link-btn {
   background: none;
   border: none;
@@ -10144,4 +10157,95 @@ kyc-compliance-content {
   font-size: 0.8125rem;
   color: #999;
   margin: 0.5rem 0 0 0;
+}
+
+/* Success Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-icon {
+  margin-bottom: 1.25rem;
+}
+
+.modal-icon.success svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem 0;
+}
+
+.modal-message {
+  font-size: 0.9375rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+.modal-btn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: #1a1a1a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.modal-btn:hover {
+  background: #333;
+}
+
+.modal-btn:active {
+  background: #000;
 }

@@ -1,7 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+import useAuth from '../hooks/useAuth';
+
+const loginSchema = z.object({
+  emailOrPhone: z
+    .string()
+    .min(1, 'Email or phone is required')
+    .refine(
+      (value) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[0-9]{8,15}$/;
+        return emailRegex.test(value) || phoneRegex.test(value);
+      },
+      { message: 'Please enter a valid email or phone number' }
+    ),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(8, 'Password must be at least 8 characters'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 /**
  * LoginScreen Component (OxPay Lite)
@@ -14,18 +38,21 @@ import './screens.css';
  */
 const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [emailOrPhone, setEmailOrPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onChange',
+  });
 
-    // Simple validation - just check if fields have any text
-    if (emailOrPhone.trim() && password.trim()) {
-      // Navigate to all services screen after successful login
-      navigate(`/${ScreenType.LOGIN}`);
-    }
+  const onSubmit = (data: LoginFormData) => {
+    login({ username: 'demo', password: 'demo123' });
+    navigate(`/${ScreenType.DASHBOARD}`);
   };
 
   const handleSingpassLogin = async () => {
@@ -60,16 +87,18 @@ const LoginScreen: React.FC = () => {
         <h1 className="login-title">OxPay Lite</h1>
 
         {/* Login Form */}
-        <form className="login-form-new" onSubmit={handleLogin}>
+        <form className="login-form-new" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label className="form-label-new">Email or Phone</label>
             <input
               type="text"
-              className="form-input-new"
+              className={`form-input-new ${errors.emailOrPhone ? 'input-error' : ''}`}
               placeholder="Enter your email or phone number"
-              value={emailOrPhone}
-              onChange={(e) => setEmailOrPhone(e.target.value)}
+              {...register('emailOrPhone')}
             />
+            {errors.emailOrPhone && (
+              <span className="error-message">{errors.emailOrPhone.message}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -77,10 +106,9 @@ const LoginScreen: React.FC = () => {
             <div className="password-input-wrapper">
               <input
                 type={showPassword ? 'text' : 'password'}
-                className="form-input-new"
+                className={`form-input-new ${errors.password ? 'input-error' : ''}`}
                 placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register('password')}
               />
               <button
                 type="button"
@@ -102,6 +130,9 @@ const LoginScreen: React.FC = () => {
 
               </button>
             </div>
+            {errors.password && (
+              <span className="error-message">{errors.password.message}</span>
+            )}
           </div>
 
           <button
@@ -112,7 +143,7 @@ const LoginScreen: React.FC = () => {
             Forgot Password?
           </button>
 
-          <button type="submit" className="login-btn-text">
+          <button type="submit" className="login-btn-text" disabled={!isValid}>
             Login
           </button>
 

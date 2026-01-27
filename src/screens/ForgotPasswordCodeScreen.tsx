@@ -24,7 +24,8 @@ const ForgotPasswordCodeScreen: React.FC = () => {
   }, [timer]);
 
   const handleCodeChange = (index: number, value: string) => {
-    if (value.length > 1) return; // Only allow single digit
+    // Only allow numeric input (0-9)
+    if (value && !/^[0-9]$/.test(value)) return;
 
     const newCode = [...code];
     newCode[index] = value;
@@ -94,6 +95,7 @@ const ForgotPasswordCodeScreen: React.FC = () => {
               ref={el => { inputRefs.current[index] = el; }}
               type="text"
               inputMode="numeric"
+              pattern="[0-9]"
               maxLength={1}
               className="code-input-box"
               value={digit}
