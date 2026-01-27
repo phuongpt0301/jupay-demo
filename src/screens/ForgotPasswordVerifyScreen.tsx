@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './screens.css';
+import { useNavigate } from 'react-router-dom';
+import { ScreenType } from '../types';
 
 /**
  * ForgotPasswordVerifyScreen Component
  * Step 2 of 5 - Verify Your Email
  */
 const ForgotPasswordVerifyScreen: React.FC = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    setTimeout(() => {
+      navigate(`/${ScreenType.REGISTER_ADDRESS}`);
+    }, 1500);
+  }, []);
+
   const handleOpenEmailApp = () => {
   };
 

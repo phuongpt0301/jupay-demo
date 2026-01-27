@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ScreenType } from '../types';
 import './screens.css';
+
+// Validation constants
+const MIN_AMOUNT = 1;
+const MAX_AMOUNT = 999999.99;
+const MAX_REFERENCE_LENGTH = 200;
+
+interface ValidationErrors {
+  amount?: string;
+  purpose?: string;
+  reference?: string;
+}
 
 /**
  * SendMoneyAmountScreen Component
@@ -11,24 +22,112 @@ const SendMoneyAmountScreen: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const recipient = location.state?.recipient || 'Alex Johnson';
-  const [amount, setAmount] = useState('252.50');
+  const [amount, setAmount] = useState('0');
   const [purpose, setPurpose] = useState('');
   const [reference, setReference] = useState('');
   const [scheduleOption, setScheduleOption] = useState('now');
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  // Validation logic
+  const validateAmount = (value: string): string | undefined => {
+    // Check if ends with decimal point
+    if (value.endsWith('.')) {
+      return 'Please enter a valid amount';
+    }
+    
+    const numValue = parseFloat(value);
+    
+    if (isNaN(numValue) || numValue <= 0) {
+      return 'Amount must be greater than 0';
+    }
+    
+    if (numValue < MIN_AMOUNT) {
+      return `Minimum amount is $${MIN_AMOUNT}`;
+    }
+    
+    if (numValue > MAX_AMOUNT) {
+      return `Maximum amount is $${MAX_AMOUNT.toLocaleString()}`;
+    }
+    
+    return undefined;
+  };
+
+  const validatePurpose = (value: string): string | undefined => {
+    if (!value) {
+      return 'Please select a purpose';
+    }
+    return undefined;
+  };
+
+  const validateReference = (value: string): string | undefined => {
+    if (value.length > MAX_REFERENCE_LENGTH) {
+      return `Reference must be ${MAX_REFERENCE_LENGTH} characters or less`;
+    }
+    return undefined;
+  };
+
+  // Compute all validation errors
+  const errors = useMemo<ValidationErrors>(() => ({
+    amount: validateAmount(amount),
+    purpose: validatePurpose(purpose),
+    reference: validateReference(reference),
+  }), [amount, purpose, reference]);
+
+  // Check if form is valid
+  const isFormValid = useMemo(() => {
+    return !errors.amount && !errors.purpose && !errors.reference;
+  }, [errors]);
+
+  // Handle field touch for showing errors
+  const handleFieldTouch = (field: string) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+  };
 
   const handleNumberClick = (num: string) => {
+    // Don't allow multiple decimal points
     if (num === '.' && amount.includes('.')) return;
-    setAmount(prev => prev === '0' ? num : prev + num);
+
+    const parts = amount.split('.');
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+
+    // If typing a digit (not decimal point)
+    if (num !== '.') {
+      if (amount.includes('.')) {
+        // Digit goes to decimal part - limit to 2 decimal places
+        if (decimalPart && decimalPart.length >= 2) return;
+      } else {
+        // Digit goes to integer part - limit to 6 digits
+        // (considering '0' will be replaced, so effective length is 0)
+        const effectiveLength = integerPart === '0' ? 0 : integerPart.length;
+        if (effectiveLength >= 6) return;
+      }
+    }
+
+    setAmount(prev => prev === '0' && num !== '.' ? num : prev + num);
   };
 
   const handleBackspace = () => {
     setAmount(prev => prev.length > 1 ? prev.slice(0, -1) : '0');
   };
 
+  // Format amount for display (add commas for thousands)
+  const formatAmountDisplay = (value: string) => {
+    const parts = value.split('.');
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+  };
+
   const handleContinue = () => {
-    navigate(`/${ScreenType.SELECT_PAYMENT_METHOD}`, {
-      state: { recipient, amount, purpose, reference, scheduleOption }
-    });
+    // Mark all fields as touched to show errors
+    setTouched({ amount: true, purpose: true, reference: true });
+    
+    // Only navigate if form is valid
+    if (isFormValid) {
+      navigate(`/${ScreenType.SELECT_PAYMENT_METHOD}`, {
+        state: { recipient, amount, purpose, reference, scheduleOption }
+      });
+    }
   };
 
   const handleBack = () => {
@@ -89,10 +188,13 @@ const SendMoneyAmountScreen: React.FC = () => {
         </div>
 
         {/* Amount Display */}
-        <div className="amount-display">
+        <div className={`amount-display ${touched.amount && errors.amount ? 'amount-display-error' : ''}`}>
           <div className="amount-currency-symbol">$</div>
-          <span className="amount-value">{amount}</span>
+          <span className="amount-value">{formatAmountDisplay(amount)}</span>
         </div>
+        {touched.amount && errors.amount && (
+          <div className="validation-error-message">{errors.amount}</div>
+        )}
 
         {/* Number Pad */}
         <div className="number-pad">
@@ -115,9 +217,10 @@ const SendMoneyAmountScreen: React.FC = () => {
         <div className="payment-details-section">
           <label className="detail-label">Purpose</label>
           <select
-            className="detail-select"
+            className={`detail-select ${touched.purpose && errors.purpose ? 'input-error' : ''}`}
             value={purpose}
             onChange={(e) => setPurpose(e.target.value)}
+            onBlur={() => handleFieldTouch('purpose')}
           >
             <option value="">Select purpose</option>
             <option value="family">Family Support</option>
@@ -125,18 +228,31 @@ const SendMoneyAmountScreen: React.FC = () => {
             <option value="payment">Payment</option>
             <option value="other">Other</option>
           </select>
+          {touched.purpose && errors.purpose && (
+            <div className="validation-error-message">{errors.purpose}</div>
+          )}
         </div>
 
         {/* Reference */}
         <div className="payment-details-section">
           <label className="detail-label">Reference</label>
           <textarea
-            className="detail-textarea"
+            className={`detail-textarea ${touched.reference && errors.reference ? 'input-error' : ''}`}
             placeholder="Add note (optional)"
             value={reference}
             onChange={(e) => setReference(e.target.value)}
+            onBlur={() => handleFieldTouch('reference')}
             rows={3}
+            maxLength={MAX_REFERENCE_LENGTH + 50}
           />
+          <div className="field-footer">
+            <span className={`character-count ${reference.length > MAX_REFERENCE_LENGTH ? 'character-count-error' : ''}`}>
+              {reference.length}/{MAX_REFERENCE_LENGTH}
+            </span>
+          </div>
+          {touched.reference && errors.reference && (
+            <div className="validation-error-message">{errors.reference}</div>
+          )}
         </div>
 
         {/* Schedule Options */}
@@ -165,7 +281,10 @@ const SendMoneyAmountScreen: React.FC = () => {
         </div>
 
         {/* Continue Button */}
-        <button className="continue-btn" onClick={handleContinue}>
+        <button 
+          className={`continue-btn ${!isFormValid ? 'continue-btn-disabled' : ''}`} 
+          onClick={handleContinue}
+        >
           Continue
         </button>
       </div>

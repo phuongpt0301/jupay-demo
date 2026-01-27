@@ -25,7 +25,7 @@ const RegisterSecurityScreen: React.FC = () => {
   };
 
   const handleBack = () => {
-    navigate(`/${ScreenType.REGISTER_DOCUMENTS}`);
+    navigate(-1);
   };
 
   const handleToggle = (type: 'biometric' | 'pin') => {

@@ -1,7 +1,42 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+
+const addRecipientSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, 'Full name is required')
+    .min(2, 'Full name must be at least 2 characters'),
+  relationship: z
+    .string()
+    .min(1, 'Please select a relationship'),
+  bank: z
+    .string()
+    .min(1, 'Please select a bank'),
+  accountType: z
+    .string()
+    .min(1, 'Please select an account type'),
+  accountNumber: z
+    .string()
+    .min(1, 'Account number is required')
+    .regex(/^\d{8,20}$/, 'Please enter a valid account number (8-20 digits)'),
+  email: z
+    .string()
+    .email('Please enter a valid email address')
+    .optional()
+    .or(z.literal('')),
+  mobile: z
+    .string()
+    .regex(/^\+?[0-9\s]{8,20}$/, 'Please enter a valid mobile number')
+    .optional()
+    .or(z.literal('')),
+});
+
+type AddRecipientFormData = z.infer<typeof addRecipientSchema>;
 
 /**
  * AddRecipientScreen Component
@@ -9,24 +44,37 @@ import './screens.css';
  */
 const AddRecipientScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [relationship, setRelationship] = useState('');
-  const [bank, setBank] = useState('');
-  const [accountType, setAccountType] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [verifyModalType, setVerifyModalType] = useState<'success' | 'error'>('success');
 
-  const handleSaveAndContinue = () => {
-    // Validate and save recipient
-    if (fullName && bank && accountNumber) {
-      alert('Recipient added successfully!');
-      navigate(`/${ScreenType.SEND_MONEY_AMOUNT}`);
-    }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<AddRecipientFormData>({
+    resolver: zodResolver(addRecipientSchema),
+    mode: 'onChange',
+  });
+
+  const accountNumber = watch('accountNumber', '');
+
+  const onSubmit = (data: AddRecipientFormData) => {
+    console.log('Recipient data:', data);
+    navigate(`/${ScreenType.SEND_MONEY_AMOUNT}`);
   };
 
   const handleVerifyAccount = () => {
-    alert('Verifying account...');
+    if (accountNumber && /^\d{8,20}$/.test(accountNumber)) {
+      setVerifyModalType('success');
+    } else {
+      setVerifyModalType('error');
+    }
+    setShowVerifyModal(true);
+  };
+
+  const handleCloseVerifyModal = () => {
+    setShowVerifyModal(false);
   };
 
   const handleBack = () => {
@@ -50,7 +98,7 @@ const AddRecipientScreen: React.FC = () => {
         <div className="border"></div>
 
         {/* Form */}
-        <form className="add-recipient-form">
+        <form className="add-recipient-form" onSubmit={handleSubmit(onSubmit)}>
           {/* Personal Details Section */}
           <div className="form-section">
             <h2 className="form-section-title">Personal Details</h2>
@@ -59,19 +107,20 @@ const AddRecipientScreen: React.FC = () => {
               <label className="form-label-new">Full Name</label>
               <input
                 type="text"
-                className="form-input-new"
+                className={`form-input-new ${errors.fullName ? 'input-error' : ''}`}
                 placeholder="Enter full name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                {...register('fullName')}
               />
+              {errors.fullName && (
+                <span className="error-message">{errors.fullName.message}</span>
+              )}
             </div>
 
             <div className="form-group">
               <label className="form-label-new">Relationship</label>
               <select
-                className="form-select"
-                value={relationship}
-                onChange={(e) => setRelationship(e.target.value)}
+                className={`form-select ${errors.relationship ? 'input-error' : ''}`}
+                {...register('relationship')}
               >
                 <option value="">Select relationship</option>
                 <option value="family">Family</option>
@@ -79,6 +128,9 @@ const AddRecipientScreen: React.FC = () => {
                 <option value="business">Business</option>
                 <option value="other">Other</option>
               </select>
+              {errors.relationship && (
+                <span className="error-message">{errors.relationship.message}</span>
+              )}
             </div>
           </div>
 
@@ -89,9 +141,8 @@ const AddRecipientScreen: React.FC = () => {
             <div className="form-group">
               <label className="form-label-new">Bank</label>
               <select
-                className="form-select"
-                value={bank}
-                onChange={(e) => setBank(e.target.value)}
+                className={`form-select ${errors.bank ? 'input-error' : ''}`}
+                {...register('bank')}
               >
                 <option value="">Select bank</option>
                 <option value="dbs">DBS Bank</option>
@@ -100,31 +151,38 @@ const AddRecipientScreen: React.FC = () => {
                 <option value="posb">POSB</option>
                 <option value="other">Other</option>
               </select>
+              {errors.bank && (
+                <span className="error-message">{errors.bank.message}</span>
+              )}
             </div>
 
             <div className="form-group">
               <label className="form-label-new">Account Type</label>
               <select
-                className="form-select"
-                value={accountType}
-                onChange={(e) => setAccountType(e.target.value)}
+                className={`form-select ${errors.accountType ? 'input-error' : ''}`}
+                {...register('accountType')}
               >
                 <option value="">Select account type</option>
                 <option value="savings">Savings</option>
                 <option value="current">Current</option>
                 <option value="fixed">Fixed Deposit</option>
               </select>
+              {errors.accountType && (
+                <span className="error-message">{errors.accountType.message}</span>
+              )}
             </div>
 
             <div className="form-group">
               <label className="form-label-new">Account Number</label>
               <input
                 type="text"
-                className="form-input-new"
+                className={`form-input-new ${errors.accountNumber ? 'input-error' : ''}`}
                 placeholder="Enter account number"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
+                {...register('accountNumber')}
               />
+              {errors.accountNumber && (
+                <span className="error-message">{errors.accountNumber.message}</span>
+              )}
             </div>
 
             <button
@@ -133,7 +191,7 @@ const AddRecipientScreen: React.FC = () => {
               onClick={handleVerifyAccount}
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_1_725)">
+                <g clipPath="url(#clip0_1_725)">
                   <path d="M14.0299 7.99988C14.0299 4.66961 11.3302 1.96988 7.99988 1.96988C4.66961 1.96988 1.96988 4.66961 1.96988 7.99988C1.96988 11.3302 4.66961 14.0299 7.99988 14.0299C11.3302 14.0299 14.0299 11.3302 14.0299 7.99988ZM15.3699 7.99988C15.3699 12.0702 12.0702 15.3699 7.99988 15.3699C3.92955 15.3699 0.629883 12.0702 0.629883 7.99988C0.629883 3.92955 3.92955 0.629883 7.99988 0.629883C12.0702 0.629883 15.3699 3.92955 15.3699 7.99988Z" fill="#565E6D" />
                   <path d="M9.58751 6.14032C9.85062 5.92569 10.2386 5.94082 10.4838 6.18612C10.7292 6.43142 10.7443 6.81935 10.5297 7.08253L10.4838 7.13352L7.80384 9.81352C7.55855 10.0589 7.17062 10.074 6.90751 9.85934L6.85646 9.81352L5.51645 8.47352L5.47064 8.42253C5.25601 8.15935 5.27115 7.77142 5.51645 7.52614C5.76174 7.28085 6.14968 7.26571 6.41283 7.48031L6.46387 7.52614L7.33015 8.39238L9.53646 6.18612L9.58751 6.14032Z" fill="#565E6D" />
                 </g>
@@ -155,22 +213,26 @@ const AddRecipientScreen: React.FC = () => {
               <label className="form-label-new">Email</label>
               <input
                 type="email"
-                className="form-input-new"
+                className={`form-input-new ${errors.email ? 'input-error' : ''}`}
                 placeholder="beneficiary@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register('email')}
               />
+              {errors.email && (
+                <span className="error-message">{errors.email.message}</span>
+              )}
             </div>
 
             <div className="form-group">
               <label className="form-label-new">Mobile</label>
               <input
                 type="tel"
-                className="form-input-new"
+                className={`form-input-new ${errors.mobile ? 'input-error' : ''}`}
                 placeholder="+65 XXXX XXXX"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                {...register('mobile')}
               />
+              {errors.mobile && (
+                <span className="error-message">{errors.mobile.message}</span>
+              )}
             </div>
           </div>
 
@@ -181,14 +243,46 @@ const AddRecipientScreen: React.FC = () => {
 
           {/* Save Button */}
           <button
-            type="button"
+            type="submit"
             className="save-continue-btn"
-            onClick={handleSaveAndContinue}
+            disabled={!isValid}
           >
             Save & Continue
           </button>
         </form>
       </div>
+
+      {/* Verify Account Modal */}
+      {showVerifyModal && (
+        <div className="modal-overlay" onClick={handleCloseVerifyModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className={`modal-icon ${verifyModalType}`}>
+              {verifyModalType === 'success' ? (
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" stroke="#22c55e" strokeWidth="2" fill="#dcfce7" />
+                  <path d="M8 12L11 15L16 9" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : (
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" stroke="#ef4444" strokeWidth="2" fill="#fee2e2" />
+                  <path d="M12 8V12M12 16H12.01" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </div>
+            <h2 className="modal-title">
+              {verifyModalType === 'success' ? 'Account Verified!' : 'Verification Failed'}
+            </h2>
+            <p className="modal-message">
+              {verifyModalType === 'success'
+                ? 'The bank account has been verified successfully.'
+                : 'Please enter a valid account number (8-20 digits) first.'}
+            </p>
+            <button className="modal-btn" onClick={handleCloseVerifyModal}>
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

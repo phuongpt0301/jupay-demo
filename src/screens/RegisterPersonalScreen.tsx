@@ -1,7 +1,52 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+
+const countryCodes = [
+  { code: '+65', country: 'Singapore', flag: '🇸🇬' },
+  { code: '+84', country: 'Vietnam', flag: '🇻🇳' },
+  { code: '+60', country: 'Malaysia', flag: '🇲🇾' },
+  { code: '+62', country: 'Indonesia', flag: '🇮🇩' },
+  { code: '+66', country: 'Thailand', flag: '🇹🇭' },
+  { code: '+63', country: 'Philippines', flag: '🇵🇭' },
+  { code: '+1', country: 'USA', flag: '🇺🇸' },
+  { code: '+44', country: 'UK', flag: '🇬🇧' },
+  { code: '+86', country: 'China', flag: '🇨🇳' },
+  { code: '+81', country: 'Japan', flag: '🇯🇵' },
+  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
+  { code: '+91', country: 'India', flag: '🇮🇳' },
+];
+
+const registerPersonalSchema = z.object({
+  fullName: z
+    .string()
+    .min(1, 'Full name is required')
+    .min(2, 'Full name must be at least 2 characters'),
+  nric: z
+    .string()
+    .min(1, 'NRIC/FIN is required')
+    .regex(/^[STFG]\d{7}[A-Z]$/i, 'Please enter a valid NRIC/FIN (e.g. S1234567A)'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required'),
+  countryCode: z
+    .string()
+    .min(1, 'Country code is required'),
+  mobile: z
+    .string()
+    .min(1, 'Mobile number is required')
+    .regex(/^\d{7,15}$/, 'Please enter a valid mobile number (7-15 digits)'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+});
+
+type RegisterPersonalFormData = z.infer<typeof registerPersonalSchema>;
 
 /**
  * RegisterPersonalScreen Component
@@ -9,17 +54,19 @@ import './screens.css';
  */
 const RegisterPersonalScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [nric, setNric] = useState('');
-  const [dob, setDob] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [email, setEmail] = useState('');
 
-  const handleContinue = () => {
-    // Simple validation - just check if any field has text
-    if (fullName.trim() || nric.trim() || mobile.trim() || email.trim()) {
-      navigate(`/${ScreenType.REGISTER_ADDRESS}`);
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<RegisterPersonalFormData>({
+    resolver: zodResolver(registerPersonalSchema),
+    mode: 'onChange',
+  });
+
+  const onSubmit = (data: RegisterPersonalFormData) => {
+    console.log('Personal details:', data);
+    navigate(`/${ScreenType.REGISTER_DOCUMENTS}`);
   };
 
   const handleBack = () => {
@@ -46,27 +93,31 @@ const RegisterPersonalScreen: React.FC = () => {
         <div className="border" />
 
         {/* Form */}
-        <form className="register-form" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+        <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label className="form-label-new">Full Name (as in NRIC)</label>
             <input
               type="text"
-              className="form-input-new"
+              className={`form-input-new ${errors.fullName ? 'input-error' : ''}`}
               placeholder="Enter full name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              {...register('fullName')}
             />
+            {errors.fullName && (
+              <span className="error-message">{errors.fullName.message}</span>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label-new">NRIC/FIN Number</label>
             <input
               type="text"
-              className="form-input-new"
+              className={`form-input-new ${errors.nric ? 'input-error' : ''}`}
               placeholder="e.g. S1234567A"
-              value={nric}
-              onChange={(e) => setNric(e.target.value)}
+              {...register('nric')}
             />
+            {errors.nric && (
+              <span className="error-message">{errors.nric.message}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -74,40 +125,58 @@ const RegisterPersonalScreen: React.FC = () => {
             <div className="date-input-wrapper">
               <input
                 type="date"
-                className="form-input-new"
-                placeholder="Pick a date"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
+                className={`form-input-new ${errors.dob ? 'input-error' : ''}`}
+                {...register('dob')}
               />
             </div>
+            {errors.dob && (
+              <span className="error-message">{errors.dob.message}</span>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label-new">Mobile Number</label>
             <div className="mobile-input-wrapper">
-              <span className="country-code">+65</span>
+              <select
+                className={`country-code-select ${errors.countryCode ? 'input-error' : ''}`}
+                {...register('countryCode')}
+                defaultValue="+65"
+              >
+                {countryCodes.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.flag} {country.code}
+                  </option>
+                ))}
+              </select>
               <input
                 type="tel"
-                className="form-input-new mobile-input"
+                className={`form-input-new mobile-input ${errors.mobile ? 'input-error' : ''}`}
                 placeholder="e.g. 91234567"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                {...register('mobile')}
               />
             </div>
+            {errors.countryCode && (
+              <span className="error-message">{errors.countryCode.message}</span>
+            )}
+            {errors.mobile && (
+              <span className="error-message">{errors.mobile.message}</span>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-label-new">Email Address</label>
             <input
               type="email"
-              className="form-input-new"
+              className={`form-input-new ${errors.email ? 'input-error' : ''}`}
               placeholder="e.g. user@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
             />
+            {errors.email && (
+              <span className="error-message">{errors.email.message}</span>
+            )}
           </div>
 
-          <button type="submit" className="register-continue-btn">
+          <button type="submit" className="register-continue-btn" disabled={!isValid}>
             Continue
           </button>
 

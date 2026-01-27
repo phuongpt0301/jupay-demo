@@ -1,7 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+
+const createAccountSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  confirmPassword: z
+    .string()
+    .min(1, 'Please confirm your password'),
+  agreeToTerms: z
+    .boolean()
+    .refine((val) => val === true, 'You must agree to the Terms and Privacy Policy'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Passwords do not match',
+  path: ['confirmPassword'],
+});
+
+type CreateAccountFormData = z.infer<typeof createAccountSchema>;
 
 /**
  * CreateAccountScreen Component
@@ -9,32 +36,44 @@ import './screens.css';
  */
 const CreateAccountScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
 
-  const handleContinue = () => {
-    if (email.trim() && password.trim() && confirmPassword.trim() && agreeToTerms) {
-      // For demo, navigate to register personal details
-      navigate(`/${ScreenType.FORGOT_PASSWORD_VERIFY}`);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm<CreateAccountFormData>({
+    resolver: zodResolver(createAccountSchema),
+    mode: 'onChange',
+    defaultValues: {
+      agreeToTerms: false,
+    },
+  });
+
+  const password = watch('password', '');
+  const confirmPassword = watch('confirmPassword', '');
+
+  // Re-validate confirmPassword when password changes
+  useEffect(() => {
+    if (confirmPassword) {
+      trigger('confirmPassword');
     }
+  }, [password, confirmPassword, trigger]);
+
+  // Password validation rules for UI display
+  const hasMinLength = password.length >= 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+
+  const onSubmit = (data: CreateAccountFormData) => {
+    console.log('Create account:', data);
+    navigate(`/${ScreenType.FORGOT_PASSWORD_CODE}`);
   };
 
   const handleBack = () => {
     navigate(-1);
   };
-
-  const isValid = email.trim() && password.trim() && confirmPassword.trim() && agreeToTerms;
-  console.log(password);
-  console.log(email);
-  console.log(confirmPassword);
-  console.log(agreeToTerms);
-
-  // Password validation rules
-  const hasMinLength = password.length >= 8;
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
 
   return (
     <div className="create-account-screen">
@@ -53,26 +92,27 @@ const CreateAccountScreen: React.FC = () => {
         <div className="border" />
 
         {/* Form */}
-        <form className="create-account-form" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+        <form className="create-account-form" onSubmit={handleSubmit(onSubmit)}>
           {/* Email Address */}
           <div className="form-group-simple">
             <input
               type="email"
-              className="form-input-simple"
+              className={`form-input-simple ${errors.email ? 'input-error' : ''}`}
               placeholder="Email Address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
             />
+            {errors.email && (
+              <span className="error-message">{errors.email.message}</span>
+            )}
           </div>
 
           {/* Password */}
           <div className="form-group-simple">
             <input
               type="password"
-              className="form-input-simple"
+              className={`form-input-simple ${errors.password ? 'input-error' : ''}`}
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
             />
           </div>
 
@@ -89,11 +129,13 @@ const CreateAccountScreen: React.FC = () => {
           <div className="form-group-simple">
             <input
               type="password"
-              className="form-input-simple"
+              className={`form-input-simple ${errors.confirmPassword ? 'input-error' : ''}`}
               placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              {...register('confirmPassword')}
             />
+            {errors.confirmPassword && (
+              <span className="error-message">{errors.confirmPassword.message}</span>
+            )}
           </div>
 
           {/* Terms and Privacy Checkbox */}
@@ -101,11 +143,13 @@ const CreateAccountScreen: React.FC = () => {
             <label className="checkbox-label">
               <input
                 type="checkbox"
-                checked={agreeToTerms}
-                onChange={(e) => setAgreeToTerms(e.target.checked)}
+                {...register('agreeToTerms')}
               />
               <span className="checkbox-text">Agree to Terms and Privacy Policy</span>
             </label>
+            {errors.agreeToTerms && (
+              <span className="error-message">{errors.agreeToTerms.message}</span>
+            )}
           </div>
 
           {/* Continue Button */}

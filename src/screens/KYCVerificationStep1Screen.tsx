@@ -1,7 +1,35 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { ScreenType } from '../types';
 import './screens.css';
+
+const kycStep1Schema = z.object({
+  fullName: z
+    .string()
+    .min(1, 'Full name is required')
+    .min(2, 'Full name must be at least 2 characters'),
+  dateOfBirth: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .regex(/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/, 'Please enter a valid date (DD/MM/YYYY)'),
+  nationality: z
+    .string()
+    .min(1, 'Nationality is required')
+    .min(2, 'Please enter a valid nationality'),
+  countryOfResidence: z
+    .string()
+    .min(1, 'Country of residence is required')
+    .min(2, 'Please enter a valid country'),
+  phoneNumber: z
+    .string()
+    .min(1, 'Phone number is required')
+    .regex(/^\+?[0-9\s]{8,20}$/, 'Please enter a valid phone number (e.g., +1 234 567 8900)'),
+});
+
+type KYCStep1FormData = z.infer<typeof kycStep1Schema>;
 
 /**
  * KYCVerificationStep1Screen Component
@@ -9,11 +37,15 @@ import './screens.css';
  */
 const KYCVerificationStep1Screen: React.FC = () => {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [nationality, setNationality] = useState('');
-  const [countryOfResidence, setCountryOfResidence] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<KYCStep1FormData>({
+    resolver: zodResolver(kycStep1Schema),
+    mode: 'onChange',
+  });
 
   const handleBack = () => {
     navigate(-1);
@@ -23,12 +55,9 @@ const KYCVerificationStep1Screen: React.FC = () => {
     navigate(`/${ScreenType.DASHBOARD}`);
   };
 
-  const handleContinue = () => {
-    if (fullName && dateOfBirth && nationality && countryOfResidence && phoneNumber) {
-      navigate(`/${ScreenType.KYC_COMPLIANCE_STATUS}`);
-    } else {
-      alert('Please fill in all fields');
-    }
+  const onSubmit = (data: KYCStep1FormData) => {
+    console.log('KYC Step 1 data:', data);
+    navigate(`/${ScreenType.KYC_COMPLIANCE_STATUS}`);
   };
 
   return (
@@ -52,7 +81,7 @@ const KYCVerificationStep1Screen: React.FC = () => {
         <div className="border"></div>
 
         {/* Form */}
-        <div className="kyc-form">
+        <form className="kyc-form" onSubmit={handleSubmit(onSubmit)}>
           {/* Full Name */}
           <div className="form-group">
             <label className="form-label">Full Name</label>
@@ -66,12 +95,14 @@ const KYCVerificationStep1Screen: React.FC = () => {
               </div>
               <input
                 type="text"
-                className="form-input"
+                className={`form-input ${errors.fullName ? 'input-error' : ''}`}
                 placeholder="Enter your full legal name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                {...register('fullName')}
               />
             </div>
+            {errors.fullName && (
+              <span className="error-message">{errors.fullName.message}</span>
+            )}
           </div>
 
           {/* Date of Birth */}
@@ -94,12 +125,14 @@ const KYCVerificationStep1Screen: React.FC = () => {
               </div>
               <input
                 type="text"
-                className="form-input"
+                className={`form-input ${errors.dateOfBirth ? 'input-error' : ''}`}
                 placeholder="DD/MM/YYYY"
-                value={dateOfBirth}
-                onChange={(e) => setDateOfBirth(e.target.value)}
+                {...register('dateOfBirth')}
               />
             </div>
+            {errors.dateOfBirth && (
+              <span className="error-message">{errors.dateOfBirth.message}</span>
+            )}
           </div>
 
           {/* Nationality */}
@@ -115,12 +148,14 @@ const KYCVerificationStep1Screen: React.FC = () => {
               </div>
               <input
                 type="text"
-                className="form-input"
+                className={`form-input ${errors.nationality ? 'input-error' : ''}`}
                 placeholder="e.g., United States"
-                value={nationality}
-                onChange={(e) => setNationality(e.target.value)}
+                {...register('nationality')}
               />
             </div>
+            {errors.nationality && (
+              <span className="error-message">{errors.nationality.message}</span>
+            )}
           </div>
 
           {/* Country of Residence */}
@@ -135,12 +170,14 @@ const KYCVerificationStep1Screen: React.FC = () => {
               </div>
               <input
                 type="text"
-                className="form-input"
+                className={`form-input ${errors.countryOfResidence ? 'input-error' : ''}`}
                 placeholder="e.g., United States"
-                value={countryOfResidence}
-                onChange={(e) => setCountryOfResidence(e.target.value)}
+                {...register('countryOfResidence')}
               />
             </div>
+            {errors.countryOfResidence && (
+              <span className="error-message">{errors.countryOfResidence.message}</span>
+            )}
           </div>
 
           {/* Phone Number */}
@@ -154,19 +191,21 @@ const KYCVerificationStep1Screen: React.FC = () => {
               </div>
               <input
                 type="tel"
-                className="form-input"
+                className={`form-input ${errors.phoneNumber ? 'input-error' : ''}`}
                 placeholder="e.g., +1 234 567 8900"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                {...register('phoneNumber')}
               />
             </div>
+            {errors.phoneNumber && (
+              <span className="error-message">{errors.phoneNumber.message}</span>
+            )}
           </div>
-        </div>
 
-        {/* Continue Button */}
-        <button className="kyc-continue-btn" onClick={handleContinue}>
-          Continue
-        </button>
+          {/* Continue Button */}
+          <button type="submit" className="kyc-continue-btn" disabled={!isValid}>
+            Continue
+          </button>
+        </form>
       </div>
     </div>
   );

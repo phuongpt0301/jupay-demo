@@ -15,12 +15,12 @@ const RegisterAddressScreen: React.FC = () => {
     if (selectedMethod === 'singpass') {
       navigate(`/${ScreenType.REGISTER_SECURITY}`);
     } else {
-      navigate(`/${ScreenType.REGISTER_DOCUMENTS}`);
+      navigate(`/${ScreenType.REGISTER_PERSONAL}`);
     }
   };
 
   const handleBack = () => {
-    navigate(`/${ScreenType.REGISTER_PERSONAL}`);
+    navigate(-1);
   };
 
   return (

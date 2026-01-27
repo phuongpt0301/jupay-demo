@@ -51,7 +51,7 @@ const ForgotPasswordCodeScreen: React.FC = () => {
   const handleVerifyCode = () => {
     const enteredCode = code.join('');
     if (enteredCode.length === 6) {
-      navigate(`/${ScreenType.FORGOT_PASSWORD_NEW}`);
+      navigate(`/${ScreenType.FORGOT_PASSWORD_VERIFY}`);
     }
   };
 

@@ -65,7 +65,7 @@ const LoginScreen: React.FC = () => {
   };
 
   const handleRegister = () => {
-    navigate(`/${ScreenType.REGISTER_PERSONAL}`);
+    navigate(`/${ScreenType.CREATE_ACCOUNT}`);
   };
 
   return (
