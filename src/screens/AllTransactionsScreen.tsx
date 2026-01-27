@@ -1,6 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import BottomNavigation from '../components/BottomNavigation';
 import './screens.css';
+
+// Transaction type for better type safety
+interface Transaction {
+  id: number;
+  icon: React.ReactNode;
+  name: string;
+  amount: number;
+  date: string;
+  status: string;
+  type: 'payment' | 'bill' | 'top-up' | 'gift' | 'transfer' | 'remittance';
+}
+
+// Static filter options
+const FILTERS = [
+  { id: 'all', label: 'All' },
+  { id: 'payments', label: 'Payments' },
+  { id: 'bills', label: 'Bills' },
+  { id: 'top-up', label: 'Top-up' },
+];
 
 /**
  * AllTransactionsScreen Component
@@ -11,20 +30,13 @@ const AllTransactionsScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [timeFilter, setTimeFilter] = useState('this-month');
 
-  const filters = [
-    { id: 'all', label: 'All' },
-    { id: 'payments', label: 'Payments' },
-    { id: 'bills', label: 'Bills' },
-    { id: 'top-up', label: 'Top-up' },
-  ];
-
-  const allTransactions = [
+  const allTransactions: Transaction[] = [
     {
       id: 1, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14.9851 10.825C14.765 10.825 14.5539 10.9125 14.3983 11.0682C14.2426 11.2238 14.1551 11.4349 14.1551 11.655L14.1591 11.7368C14.178 11.9269 14.262 12.1056 14.3983 12.2418C14.5539 12.3975 14.765 12.485 14.9851 12.485H17.4751V10.825H14.9851ZM4.19508 3.35501C3.97495 3.35501 3.7639 3.44251 3.60824 3.59817C3.45259 3.75383 3.36508 3.96487 3.36508 4.18501L3.36913 4.26687C3.38796 4.45694 3.47201 4.63561 3.60824 4.77184C3.7639 4.9275 3.97495 5.01501 4.19508 5.01501L14.9851 5.01501V3.35501L4.19508 3.35501ZM16.6451 5.01501C17.0853 5.01501 17.5074 5.19002 17.8188 5.50134C18.13 5.81265 18.3051 6.23475 18.3051 6.67501L18.3051 9.38869C18.4294 9.46057 18.5454 9.54805 18.6488 9.6513C18.96 9.96264 19.1351 10.3848 19.1351 10.825V12.485C19.1351 12.9252 18.96 13.3474 18.6488 13.6587C18.3375 13.97 17.9153 14.145 17.4751 14.145H14.9851C14.3246 14.145 13.6915 13.8825 13.2246 13.4155C12.816 13.007 12.5639 12.4713 12.5072 11.9014L12.4951 11.655C12.4951 10.9946 12.7576 10.3615 13.2246 9.89449C13.6915 9.42754 14.3246 9.16501 14.9851 9.16501H16.6451V6.67501L4.19508 6.67501C3.53469 6.67501 2.90154 6.41248 2.43457 5.94551C2.02605 5.53699 1.77389 5.00132 1.71724 4.43142L1.70508 4.18501C1.70508 3.52462 1.96761 2.89147 2.43457 2.4245C2.90154 1.95754 3.53469 1.69501 4.19508 1.69501L14.9851 1.69501L15.1488 1.70312C15.529 1.74078 15.8863 1.90886 16.1588 2.18134C16.47 2.49265 16.6451 2.91475 16.6451 3.35501V5.01501Z" fill="#171A1F" />
         <path d="M1.7002 15.81L1.7002 4.19002C1.7002 3.73162 2.0718 3.36002 2.5302 3.36002C2.98859 3.36002 3.3602 3.73162 3.3602 4.19002L3.3602 15.81C3.3602 16.0301 3.4477 16.2412 3.60336 16.3968C3.75902 16.5525 3.97006 16.64 4.1902 16.64L16.6402 16.64L16.6402 13.32C16.6402 12.8616 17.0118 12.49 17.4702 12.49C17.9286 12.49 18.3002 12.8616 18.3002 13.32V16.64C18.3002 17.0802 18.1251 17.5024 17.8139 17.8137C17.5026 18.125 17.0804 18.3 16.6402 18.3L4.1902 18.3C3.52981 18.3 2.89666 18.0375 2.42969 17.5705C1.96272 17.1036 1.7002 16.4704 1.7002 15.81Z" fill="#171A1F" />
       </svg>
-      , name: 'Pay Anything to John', amount: 500.00, date: 'Aug 15', status: 'Pending'
+      , name: 'Pay Anything to John', amount: 500.00, date: 'Aug 15', status: 'Pending', type: 'payment'
     },
     {
       id: 2, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,14 +45,14 @@ const AllTransactionsScreen: React.FC = () => {
         <path d="M13.3206 9.16998C13.779 9.16998 14.1506 9.54157 14.1506 9.99998C14.1506 10.4584 13.779 10.83 13.3206 10.83L6.68059 10.83C6.22219 10.83 5.85059 10.4584 5.85059 9.99998C5.85059 9.54157 6.22219 9.16998 6.68059 9.16998L13.3206 9.16998Z" fill="#171A1F" />
         <path d="M10.8257 12.5C11.2841 12.5 11.6557 12.8716 11.6557 13.33C11.6557 13.7884 11.2841 14.16 10.8257 14.16L6.6757 14.16C6.21731 14.16 5.8457 13.7884 5.8457 13.33C5.8457 12.8716 6.21731 12.5 6.6757 12.5L10.8257 12.5Z" fill="#171A1F" />
       </svg>
-      , name: 'SP Services bill', amount: 128.50, date: 'Aug 14', status: 'Completed'
+      , name: 'SP Services bill', amount: 128.50, date: 'Aug 14', status: 'Completed', type: 'bill'
     },
     {
       id: 3, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M17.7133 5.26318C18.0374 4.93905 18.5628 4.93905 18.8869 5.26318C19.211 5.58732 19.211 6.11272 18.8869 6.43686L11.8319 13.4918C11.5078 13.816 10.9824 13.816 10.6583 13.4918L7.09506 9.92865L2.28689 14.7368C1.96275 15.061 1.43736 15.061 1.11322 14.7368C0.789084 14.4127 0.789084 13.8873 1.11322 13.5632L6.50822 8.16818L6.57144 8.11144C6.89744 7.84555 7.37801 7.86431 7.68189 8.16818L11.2451 11.7313L17.7133 5.26318Z" fill="#171A1F" />
         <path d="M17.4898 10.82V6.67001L13.3398 6.67001C12.8814 6.67001 12.5098 6.2984 12.5098 5.84001C12.5098 5.38162 12.8814 5.01001 13.3398 5.01001L18.3198 5.01001L18.4048 5.01406C18.8233 5.05666 19.1498 5.41034 19.1498 5.84001V10.82C19.1498 11.2784 18.7782 11.65 18.3198 11.65C17.8614 11.65 17.4898 11.2784 17.4898 10.82Z" fill="#171A1F" />
       </svg>
-      , name: 'SingTel top-up', amount: 50.00, date: 'Aug 13', status: 'Completed'
+      , name: 'SingTel top-up', amount: 50.00, date: 'Aug 13', status: 'Completed', type: 'top-up'
     },
     {
       id: 4, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,13 +61,13 @@ const AllTransactionsScreen: React.FC = () => {
         <path d="M3.36035 15.825L3.36035 10.015C3.36035 9.55659 3.73196 9.185 4.19035 9.185C4.64874 9.185 5.02035 9.55659 5.02035 10.015L5.02035 15.825L5.0244 15.9068C5.04323 16.0969 5.12728 16.2756 5.26352 16.4118C5.41917 16.5675 5.63022 16.655 5.85035 16.655L14.1504 16.655C14.3705 16.655 14.5815 16.5675 14.7372 16.4118C14.8929 16.2562 14.9804 16.0451 14.9804 15.825L14.9804 10.015C14.9804 9.55659 15.3519 9.185 15.8104 9.185C16.2688 9.185 16.6404 9.55659 16.6404 10.015V15.825C16.6404 16.4854 16.3778 17.1186 15.9109 17.5855C15.4439 18.0525 14.8108 18.315 14.1504 18.315H5.85035C5.18996 18.315 4.55681 18.0525 4.08985 17.5855C3.68132 17.177 3.42917 16.6413 3.37251 16.0714L3.36035 15.825Z" fill="#171A1F" />
         <path d="M14.9804 4.57962C14.9803 4.24956 14.849 3.93276 14.6156 3.69937C14.4114 3.49521 14.1435 3.36942 13.8585 3.3411L13.7354 3.33462C13.7305 3.33462 13.7256 3.3347 13.7207 3.33462C13.2173 3.32589 12.6483 3.56645 12.1005 4.17515C11.5485 4.78861 11.0834 5.7111 10.8069 6.85078C10.7165 7.22293 10.3833 7.48462 10.0004 7.48462C9.61739 7.48462 9.28423 7.22293 9.19384 6.85078C8.91728 5.7111 8.45224 4.78861 7.90023 4.17515C7.42073 3.64238 6.92499 3.39188 6.47123 3.34354L6.27994 3.33462C6.27512 3.3347 6.27017 3.33462 6.26535 3.33462C5.93524 3.33462 5.61857 3.46599 5.38509 3.69937C5.1517 3.93276 5.02045 4.24956 5.02035 4.57962L5.02683 4.70282C5.0551 4.9879 5.18076 5.25635 5.38509 5.46068C5.58933 5.66481 5.8573 5.79063 6.14215 5.81894L6.26535 5.82462L6.35046 5.82949C6.76875 5.8721 7.09517 6.22513 7.09535 6.65462C7.09535 7.08428 6.76887 7.43794 6.35046 7.48056L6.26535 7.48462L6.12107 7.48138C5.40326 7.44571 4.72209 7.14491 4.21143 6.63435C3.70064 6.12358 3.39918 5.44196 3.3636 4.7239L3.36035 4.57962C3.36045 3.8093 3.66672 3.0704 4.21143 2.5257C4.7562 1.98102 5.49499 1.67462 6.26535 1.67462V1.67624C7.35753 1.66205 8.35272 2.19674 9.13391 3.06471C9.46085 3.42801 9.75011 3.84879 10.0004 4.31295C10.2506 3.84879 10.5399 3.42801 10.8668 3.06471C11.648 2.19674 12.6432 1.66205 13.7354 1.67624V1.67462C14.5058 1.67462 15.2445 1.98102 15.7893 2.5257C16.334 3.0704 16.6403 3.8093 16.6404 4.57962C16.6404 5.35008 16.3341 6.08957 15.7893 6.63435C15.2445 7.17901 14.5057 7.48462 13.7354 7.48462C13.2769 7.48462 12.9054 7.11301 12.9054 6.65462C12.9055 6.19639 13.2771 5.82462 13.7354 5.82462C14.0654 5.82462 14.3822 5.69403 14.6156 5.46068C14.8491 5.2272 14.9804 4.90981 14.9804 4.57962Z" fill="#171A1F" />
       </svg>
-      , name: 'Adidas gift card', amount: 100.00, date: 'Aug 12', status: 'Completed'
+      , name: 'Adidas gift card', amount: 100.00, date: 'Aug 12', status: 'Completed', type: 'gift'
     },
     {
       id: 5, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M15.5192 1.7312C16.2455 1.50775 17.0534 1.44763 17.7158 1.72309L17.8463 1.78227L17.9605 1.85197C18.0687 1.93001 18.1573 2.03304 18.2175 2.15349L18.2767 2.28399C18.5522 2.94638 18.4921 3.75427 18.2686 4.48057C18.0209 5.28569 17.5341 6.12933 16.8169 6.84656L14.2328 9.42974L15.6295 15.7925L15.6327 15.808L15.6562 15.9539C15.7392 16.6253 15.4482 17.1754 15.0004 17.5523L14.9024 17.6309C14.8442 17.6745 14.7802 17.71 14.7128 17.737L14.2978 17.9032C13.6507 18.162 12.8689 18.0847 12.3468 17.5044L12.2462 17.3821C12.2363 17.3688 12.227 17.3545 12.2179 17.3407L9.7716 13.6373L8.34507 14.5889V16.6347C8.34507 16.8548 8.25755 17.0659 8.1019 17.2215L7.2719 18.0515C7.09607 18.2274 6.85065 18.3151 6.6032 18.2907C6.35578 18.2662 6.1324 18.132 5.99448 17.9251L4.42608 15.5729L2.07468 14.0053C1.8678 13.8674 1.73365 13.644 1.70912 13.3966C1.68462 13.1491 1.7724 12.9037 1.94823 12.7279L2.77823 11.8979L2.83902 11.8428C2.98672 11.7217 3.17243 11.6547 3.36507 11.6547L5.41089 11.6547L6.36166 10.2274L2.65908 7.78193C2.64526 7.7728 2.63099 7.7635 2.61775 7.75356C1.92693 7.23524 1.82056 6.39209 2.09656 5.70206L2.15573 5.58372L2.40457 5.16872C2.73669 4.56036 3.36793 4.25901 4.05079 4.34359L4.19182 4.36709L4.20723 4.37034L10.5692 5.7661L13.1533 3.18289L13.428 2.92432C14.0809 2.3475 14.8148 1.94792 15.5192 1.7312ZM16.7966 3.20234C16.6032 3.19181 16.3378 3.21651 16.0071 3.31825C15.4636 3.48554 14.8546 3.82884 14.3269 4.35656L11.4219 7.26156C11.2218 7.46168 10.9332 7.54595 10.6567 7.48527L3.86598 5.99467L3.8441 5.99224C3.83858 6.00238 3.83383 6.01315 3.82789 6.02304L3.62688 6.3578C3.61702 6.39174 3.61422 6.41326 3.61472 6.42426L7.97222 9.30251C8.15642 9.42418 8.28509 9.61384 8.32886 9.83022C8.37263 10.0465 8.3281 10.2714 8.20565 10.4551L6.54565 12.9451C6.39171 13.176 6.13258 13.3147 5.85507 13.3147L4.03134 13.3147L5.48545 14.2842L5.55112 14.3328C5.61452 14.3848 5.67001 14.4458 5.71565 14.5143L6.68507 15.9685L6.68507 14.1447C6.68507 13.8672 6.82377 13.608 7.05468 13.4542L9.54468 11.7942L9.61523 11.752C9.7843 11.662 9.98026 11.6326 10.1696 11.6709C10.386 11.7147 10.5756 11.8434 10.6973 12.0276L13.5747 16.3851C13.5889 16.3858 13.624 16.3851 13.6809 16.3624L13.9654 16.2481C13.9933 16.2197 14.0045 16.2035 14.0068 16.1986C14.0083 16.1952 14.0094 16.1918 14.01 16.1865C14.0106 16.1805 14.0111 16.1637 14.0051 16.1338L12.5145 9.34301C12.4538 9.06662 12.5381 8.77803 12.7383 8.57791L15.6433 5.67289C16.171 5.14517 16.5143 4.53621 16.6815 3.99262C16.7834 3.66148 16.8073 3.39577 16.7966 3.20234Z" fill="#171A1F" />
       </svg>
-      , name: 'Overseas transfer to Sarah', amount: 250.00, date: 'Aug 11', status: 'Pending'
+      , name: 'Overseas transfer to Sarah', amount: 250.00, date: 'Aug 11', status: 'Pending', type: 'transfer'
     },
     {
       id: 6, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,16 +75,55 @@ const AllTransactionsScreen: React.FC = () => {
         <path d="M10.8298 10C10.8298 9.5416 10.4582 9.17001 9.99977 9.17001C9.54136 9.17001 9.16977 9.5416 9.16977 10C9.16977 10.4584 9.54136 10.83 9.99977 10.83C10.4582 10.83 10.8298 10.4584 10.8298 10ZM12.4898 10C12.4898 11.3752 11.375 12.49 9.99977 12.49C8.62454 12.49 7.50977 11.3752 7.50977 10C7.50977 8.62478 8.62454 7.51001 9.99977 7.51001C11.375 7.51001 12.4898 8.62478 12.4898 10Z" fill="#171A1F" />
         <path d="M5.02854 9.16998L5.11364 9.17405C5.53217 9.21655 5.85854 9.57021 5.85854 9.99998C5.85854 10.4298 5.53217 10.7834 5.11364 10.8259L5.02854 10.83H5.02043C4.56204 10.83 4.19043 10.4584 4.19043 9.99998C4.19043 9.54157 4.56204 9.16998 5.02043 9.16998H5.02854ZM14.9886 9.16998L15.0736 9.17405C15.4921 9.21655 15.8186 9.57021 15.8186 9.99998C15.8186 10.4298 15.4921 10.7834 15.0736 10.8259L14.9886 10.83H14.9804C14.522 10.83 14.1504 10.4584 14.1504 9.99998C14.1504 9.54157 14.522 9.16998 14.9804 9.16998H14.9886Z" fill="#171A1F" />
       </svg>
-      , name: 'Remittance from Mom', amount: 1000.00, date: 'Aug 10', status: 'Completed'
+      , name: 'Remittance from Mom', amount: 1000.00, date: 'Aug 10', status: 'Completed', type: 'remittance'
     },
     {
       id: 7, icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M17.4701 5.84999C17.4701 5.39159 17.0985 5.01999 16.6401 5.01999L3.36012 5.01999C2.90172 5.01999 2.53012 5.39159 2.53012 5.84999L2.53012 14.15C2.53012 14.6084 2.90172 14.98 3.36012 14.98L16.6401 14.98C17.0985 14.98 17.4701 14.6084 17.4701 14.15L17.4701 5.84999ZM19.1301 14.15C19.1301 15.5252 18.0153 16.64 16.6401 16.64L3.36012 16.64C1.98493 16.64 0.870117 15.5252 0.870117 14.15L0.870117 5.84999C0.870117 4.4748 1.98493 3.35999 3.36012 3.35999L16.6401 3.35999C18.0153 3.35999 19.1301 4.4748 19.1301 5.84999L19.1301 14.15Z" fill="#171A1F" />
         <path d="M18.3001 7.5C18.7585 7.5 19.1301 7.87161 19.1301 8.33C19.1301 8.78841 18.7585 9.16 18.3001 9.16L1.70012 9.16C1.24172 9.16 0.870117 8.78841 0.870117 8.33C0.870117 7.87161 1.24172 7.5 1.70012 7.5L18.3001 7.5Z" fill="#171A1F" />
       </svg>
-      , name: 'Credit Card Payment', amount: 750.00, date: 'Aug 09', status: 'Completed'
+      , name: 'Credit Card Payment', amount: 750.00, date: 'Aug 09', status: 'Completed', type: 'payment'
     },
   ];
+
+  // Filter transactions based on search query and selected filter
+  const filteredTransactions = useMemo(() => {
+    return allTransactions.filter(transaction => {
+      // Search filter - search by name, amount, status
+      const searchLower = searchQuery.toLowerCase().trim();
+      const matchesSearch = searchLower === '' || 
+        transaction.name.toLowerCase().includes(searchLower) ||
+        transaction.amount.toString().includes(searchLower) ||
+        transaction.status.toLowerCase().includes(searchLower) ||
+        transaction.date.toLowerCase().includes(searchLower);
+
+      // Category filter
+      let matchesFilter = true;
+      if (selectedFilter !== 'all') {
+        switch (selectedFilter) {
+          case 'payments':
+            matchesFilter = transaction.type === 'payment' || transaction.type === 'transfer' || transaction.type === 'remittance';
+            break;
+          case 'bills':
+            matchesFilter = transaction.type === 'bill';
+            break;
+          case 'top-up':
+            matchesFilter = transaction.type === 'top-up' || transaction.type === 'gift';
+            break;
+          default:
+            matchesFilter = true;
+        }
+      }
+
+      return matchesSearch && matchesFilter;
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, selectedFilter]);
+
+  // Clear search
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
 
   return (
     <div className="all-transactions-screen screen-with-bottom-nav">
@@ -87,7 +138,7 @@ const AllTransactionsScreen: React.FC = () => {
         <div className="all-transactions-content">
           {/* Filter Pills */}
           <div className="filter-pills">
-            {filters.map(filter => (
+            {FILTERS.map(filter => (
               <button
                 key={filter.id}
                 className={`filter-pill ${selectedFilter === filter.id ? 'active' : ''}`}
@@ -128,36 +179,70 @@ const AllTransactionsScreen: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <button className="search-clear-btn" onClick={handleClearSearch} aria-label="Clear search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.5149 4.48486C11.7754 4.22431 11.7754 3.80241 11.5149 3.54186C11.2543 3.28131 10.8324 3.28131 10.5719 3.54186L8 6.11373L5.42814 3.54186C5.16759 3.28131 4.74569 3.28131 4.48514 3.54186C4.22459 3.80241 4.22459 4.22431 4.48514 4.48486L7.05701 7.05673L4.48514 9.62859C4.22459 9.88914 4.22459 10.311 4.48514 10.5716C4.74569 10.8321 5.16759 10.8321 5.42814 10.5716L8 7.99973L10.5719 10.5716C10.8324 10.8321 11.2543 10.8321 11.5149 10.5716C11.7754 10.311 11.7754 9.88914 11.5149 9.62859L8.943 7.05673L11.5149 4.48486Z" fill="#9095A0"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
 
           {/* Transactions List */}
           <div className="transactions-list-full">
-            {allTransactions.map(transaction => (
-              <div key={transaction.id} className="transaction-card-full">
-                <div className="transaction-icon-large">{transaction.icon}</div>
-                <div className="transaction-info-full">
-                  <div className="transaction-main-info">
-                    <span className="transaction-name-full">{transaction.name}</span>
-                    <span className="transaction-date-full">{transaction.date}</span>
-                  </div>
-                  <div className="transaction-sub-info">
-                    <span className="transaction-amount-full">
-                      S${transaction.amount.toFixed(2)}
-                    </span>
-                    <span className={`transaction-status-badge ${transaction.status.toLowerCase()}`}>
-                      {transaction.status}
-                    </span>
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map(transaction => (
+                <div key={transaction.id} className="transaction-card-full">
+                  <div className="transaction-icon-large">{transaction.icon}</div>
+                  <div className="transaction-info-full">
+                    <div className="transaction-main-info">
+                      <span className="transaction-name-full">{transaction.name}</span>
+                      <span className="transaction-date-full">{transaction.date}</span>
+                    </div>
+                    <div className="transaction-sub-info">
+                      <span className="transaction-amount-full">
+                        S${transaction.amount.toFixed(2)}
+                      </span>
+                      <span className={`transaction-status-badge ${transaction.status.toLowerCase()}`}>
+                        {transaction.status}
+                      </span>
+                    </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="no-results-message">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M31.926 31.9255C32.6562 31.1952 33.8385 31.1553 34.6151 31.8059L34.7428 31.9255L43.387 40.5697L43.5256 40.7215C44.1636 41.5043 44.1164 42.6577 43.387 43.387C42.6567 44.1173 41.4745 44.1582 40.6979 43.5076L40.5702 43.387L31.926 34.7428L31.787 34.5904C31.1495 33.8076 31.1962 32.6548 31.926 31.9255Z" fill="#BCC1CA"/>
+                  <path d="M35.9524 22.008C35.9524 14.3069 29.7094 8.064 22.0082 8.064C14.3071 8.064 8.06418 14.3069 8.06418 22.008C8.06418 29.7092 14.3071 35.952 22.0082 35.952C29.7094 35.952 35.9524 29.7092 35.9524 22.008ZM39.9364 22.008C39.9364 31.9094 31.9097 39.936 22.0082 39.936C12.1068 39.936 4.08008 31.9094 4.08008 22.008C4.08008 12.1066 12.1068 4.08 22.0082 4.08C31.9097 4.08 39.9364 12.1066 39.9364 22.008Z" fill="#BCC1CA"/>
+                </svg>
+                <h3>No transactions found</h3>
+                <p>
+                  {searchQuery 
+                    ? `No results for "${searchQuery}"`
+                    : 'No transactions match the selected filter'}
+                </p>
+                {searchQuery && (
+                  <button className="clear-search-link" onClick={handleClearSearch}>
+                    Clear search
+                  </button>
+                )}
               </div>
-            ))}
+            )}
           </div>
 
-          {/* Load More */}
-          <div className="load-more-section">
-            <button className="load-more-btn">Load more</button>
-          </div>
+          {/* Results count and Load More */}
+          {filteredTransactions.length > 0 && (
+            <>
+              <div className="results-count">
+                Showing {filteredTransactions.length} of {allTransactions.length} transactions
+              </div>
+              <div className="load-more-section">
+                <button className="load-more-btn">Load more</button>
+              </div>
+            </>
+          )}
           <button className="download-btn" aria-label="Download">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 19L2 15C2 14.4477 2.44772 14 3 14C3.55228 14 4 14.4477 4 15L4 19L4.00488 19.0986C4.02757 19.3276 4.12883 19.5429 4.29297 19.707C4.48051 19.8946 4.73478 20 5 20L19 20C19.2652 20 19.5195 19.8946 19.707 19.707C19.8946 19.5195 20 19.2652 20 19L20 15C20 14.4477 20.4477 14 21 14C21.5523 14 22 14.4477 22 15L22 19C22 19.7957 21.6837 20.5585 21.1211 21.1211C20.5585 21.6837 19.7957 22 19 22L5 22C4.20435 22 3.44152 21.6837 2.87891 21.1211C2.38671 20.6289 2.08291 19.9835 2.01465 19.2969L2 19Z" fill="#565E6D" />
