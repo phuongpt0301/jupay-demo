@@ -1530,6 +1530,7 @@
 .services-search .search-input-wrapper .search-input,
 .recipient-search .search-input-wrapper .search-input,
 .help-search .search-input-wrapper .search-input,
+.country-search .search-input-wrapper .search-input,
 .transactions-search .search-input-wrapper .search-input {
   padding: 0.5rem 1rem 0.5rem 2.2rem;
 }
@@ -6668,19 +6669,6 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
-  .service-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .balance-actions {
-    flex-direction: column;
-  }
-  
-  .filter-pills {
-    gap: 0.5rem;
-  }
-}
 
 
 /* ============================================================================
@@ -7932,7 +7920,6 @@
 .pay-bills-screen {
   background: white;
   min-height: 100vh;
-  padding: 1rem;
 }
 
 .pay-bills-container {
@@ -7942,12 +7929,16 @@
   padding-bottom: 5rem;
 }
 
+.pay-bills-content {
+  padding: 0 1rem;
+}
+
 .pay-bills-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   border-bottom: 1px solid #e1e5e9;
 }
 
@@ -7965,7 +7956,6 @@
   padding: 0.875rem;
   background: white;
   border: 1px solid #e1e5e9;
-  border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 500;
   color: #1a1a1a;
@@ -7987,8 +7977,6 @@
   gap: 0.75rem;
   padding: 1.5rem;
   background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -8009,13 +7997,14 @@
 }
 
 .bills-summary {
-  background: #f8f9fa;
-  border-radius: 12px;
   padding: 1.5rem;
 }
 
 .summary-header {
   margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .summary-title {
@@ -8042,12 +8031,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
   background: white;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   text-align: left;
+  padding: 0 4px 16px;
+  border-bottom: 1px solid #DEE1E6;
 }
 
 .bill-info {
@@ -8069,21 +8058,20 @@
 
 .bill-payment {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-end;
   gap: 0.5rem;
 }
 
 .bill-amount {
   font-size: 0.9375rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  color: #171A1F;
 }
 
 .bill-status {
   padding: 0.25rem 0.75rem;
-  background: #fff3cd;
-  color: #856404;
+  background: #565E6D;
+  color: #FFFFFF;
   font-size: 0.75rem;
   font-weight: 600;
   border-radius: 12px;
@@ -8096,14 +8084,12 @@
 .pay-overseas-bills-screen {
   background: white;
   min-height: 100vh;
-  padding: 1rem;
 }
 
 .pay-overseas-bills-container {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding-bottom: 5rem;
 }
 
 .overseas-bills-header {
@@ -8111,8 +8097,12 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   border-bottom: 1px solid #e1e5e9;
+}
+
+.overseas-bills-content {
+  padding: 0 1rem;
 }
 
 .overseas-bills-title {
@@ -8137,9 +8127,7 @@
 
 .country-card {
   padding: 1rem;
-  background: #f8f9fa;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
+  background: transparent;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -8149,6 +8137,14 @@
 
 .country-card:hover {
   background: #e1e5e9;
+}
+
+.country-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
 }
 
 .all-countries-list {
@@ -8177,17 +8173,17 @@
 
 .next-btn-fixed {
   position: absolute;
-  bottom: 2rem;
-  width: calc(100% - 2rem);
+  bottom: 0;
+  width: 100%;
   max-width: 448px;
   padding: 1rem;
-  background: #1a1a1a;
-  color: white;
+  background: #FFFFFF;
+  color: #565E6D;
   border: none;
-  border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
+  border-top: 1px solid #DEE1E6;
+  overflow: hidden;
 }
 
 /* ============================================================================
@@ -8197,14 +8193,12 @@
 .send-money-abroad-screen {
   background: white;
   min-height: 100vh;
-  padding: 1rem;
 }
 
 .send-money-abroad-container {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding-bottom: 5rem;
 }
 
 .abroad-header {
@@ -8212,7 +8206,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   border-bottom: 1px solid #e1e5e9;
 }
 
@@ -8399,14 +8393,12 @@
 .mobile-topup-screen {
   background: white;
   min-height: 100vh;
-  padding: 1rem;
 }
 
 .mobile-topup-container {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding-bottom: 2rem;
 }
 
 .topup-header {
@@ -8414,8 +8406,8 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
   border-bottom: 1px solid #e1e5e9;
+  padding: 1rem;
 }
 
 .topup-title {
@@ -8429,8 +8421,6 @@
 
 .promotion-banner {
   padding: 1rem;
-  background: #fff3cd;
-  border-radius: 8px;
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -8438,7 +8428,7 @@
 .promotion-text {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #856404;
+  color: #171A1F;
   margin: 0;
 }
 
@@ -8455,9 +8445,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
+  background: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -8483,13 +8471,15 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
-  font-size: 0.9375rem;
+  background: transparent;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #565E6D;
   cursor: pointer;
+  margin-bottom: 2rem;
+}
+
+.topup-content {
+  padding: 0 1rem;
   margin-bottom: 2rem;
 }
 
@@ -8510,7 +8500,6 @@
   padding: 1rem;
   background: white;
   border: 1px solid #e1e5e9;
-  border-radius: 8px;
   cursor: pointer;
   text-align: left;
 }
