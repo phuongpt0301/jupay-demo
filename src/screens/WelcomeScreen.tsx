@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
 import './screens.css';
-import useAuth from '../hooks/useAuth';
 
 /**
  * WelcomeScreen Component (Welcome Screen)
@@ -16,7 +15,6 @@ import useAuth from '../hooks/useAuth';
  */
 const WelcomeScreen: React.FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -32,7 +30,6 @@ const WelcomeScreen: React.FC = () => {
 
   const handleSingpassLogin = () => {
     // For demo, navigate to regular login immediately
-    login({ username: 'demo', password: 'demo123' });
     navigate(`/${ScreenType.VERIFY}`);
   };
 

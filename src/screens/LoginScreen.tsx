@@ -24,7 +24,7 @@ const LoginScreen: React.FC = () => {
     // Simple validation - just check if fields have any text
     if (emailOrPhone.trim() && password.trim()) {
       // Navigate to all services screen after successful login
-      navigate(`/${ScreenType.VERIFY}`);
+      navigate(`/${ScreenType.LOGIN}`);
     }
   };
 

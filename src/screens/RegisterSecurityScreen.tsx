@@ -16,12 +16,12 @@ const RegisterSecurityScreen: React.FC = () => {
 
   const handleContinueToDashboard = () => {
     login({ username: 'demo', password: 'demo123' });
-    navigate(`/${ScreenType.ALL_TRANSACTIONS}`);
+    navigate(`/${ScreenType.DASHBOARD}`);
   };
 
   const handleSkip = () => {
     login({ username: 'demo', password: 'demo123' });
-    navigate(`/${ScreenType.ALL_TRANSACTIONS}`);
+    navigate(`/${ScreenType.DASHBOARD}`);
   };
 
   const handleBack = () => {

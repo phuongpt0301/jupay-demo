@@ -28,7 +28,7 @@ const VerifyScreen: React.FC = () => {
       
       // Navigate to all services screen after successful login
       if (success) {
-        navigate(`/${ScreenType.ALL_SERVICES}`);
+        navigate(`/${ScreenType.REGISTER_SECURITY}`);
       }
     }, 3000);
 

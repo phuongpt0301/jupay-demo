@@ -39,25 +39,9 @@ const BottomNavigation: React.FC = () => {
         </svg>
         <span>Home</span>
       </button>
-
       <button
-        className={`nav-item ${isActive(`/${ScreenType.PAYMENT}`) ? 'active' : ''}`}
-        onClick={() => handleNavigation(`/${ScreenType.PAYMENT}`)}
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="5" width="20" height="14" rx="2" 
-                stroke="currentColor" 
-                strokeWidth="2"/>
-          <path d="M2 10H22" 
-                stroke="currentColor" 
-                strokeWidth="2"/>
-        </svg>
-        <span>Cards</span>
-      </button>
-
-      <button
-        className={`nav-item ${isActive(`/${ScreenType.ALL_SERVICES}`) ? 'active' : ''}`}
-        onClick={() => handleNavigation(`/${ScreenType.ALL_SERVICES}`)}
+        className={`nav-item ${isActive(`/${ScreenType.ALL_TRANSACTIONS}`) ? 'active' : ''}`}
+        onClick={() => handleNavigation(`/${ScreenType.ALL_TRANSACTIONS}`)}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" 
