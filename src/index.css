@@ -257,11 +257,6 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
-button:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm);
-}
-
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

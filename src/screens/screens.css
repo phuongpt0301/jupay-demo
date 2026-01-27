@@ -413,20 +413,17 @@
 }
 
 /* Balance Card */
-.balance-card {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  color: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
-}
-
 .balance-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
+}
+
+.balance-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .balance-header h2 {
@@ -8222,7 +8219,6 @@
 .exchange-rate-card {
   position: relative;
   padding: 1.5rem;
-  background: #f8f9fa;
   border-radius: 12px;
   margin-bottom: 2rem;
   text-align: center;
@@ -8232,7 +8228,17 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 0.5rem 0;
+}
+.exchange-rate-card-content {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.exchange-rate-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .exchange-rate-label {
@@ -8263,34 +8269,36 @@
 
 .corridor-card {
   display: flex;
-  flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background: #f8f9fa;
-  border: 1px solid #e1e5e9;
-  border-radius: 12px;
+  background: transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
+  align-items: center;
 }
 
 .corridor-card:hover {
-  border-color: #007bff;
+  opacity: 0.8;
 }
 
 .corridor-flags {
   display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
 .flag-icon {
-  font-size: 1.5rem;
+  display: flex;
+  gap: 16px;
 }
 
+.flag-icon img {
+  width: 24px;
+  height: 16px;
+}
 .corridor-text {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.55rem;
 }
 
 .corridor-from,
@@ -8311,18 +8319,14 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: transparent;
   border: none;
-  border-radius: 12px;
   cursor: pointer;
   text-align: left;
+  border-bottom: 1px solid #DEE1E6;
 }
 
 .quick-send-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #d1d5db;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -8354,9 +8358,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
+  background: transparent;
   font-size: 0.9375rem;
   font-weight: 600;
   color: #1a1a1a;
@@ -8375,15 +8377,9 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: #e7f3ff;
-  border-radius: 8px;
   font-size: 0.875rem;
   color: #1a1a1a;
   margin-bottom: 2rem;
-}
-
-.info-icon {
-  font-size: 1rem;
 }
 
 /* ============================================================================
@@ -8521,14 +8517,12 @@
 .gift-cards-screen {
   background: white;
   min-height: 100vh;
-  padding: 1rem;
 }
 
 .gift-cards-container {
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  padding-bottom: 2rem;
 }
 
 .gift-cards-header {
@@ -8536,8 +8530,12 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   border-bottom: 1px solid #e1e5e9;
+}
+
+.gift-cards-content {
+  padding: 0 1rem;
 }
 
 .gift-cards-title {
@@ -8552,18 +8550,20 @@
 .my-gift-cards-btn {
   padding: 0.5rem 1rem;
   background: white;
-  border: 1px solid #e1e5e9;
-  border-radius: 6px;
+  border: 1px solid #565E6D;
   font-size: 0.875rem;
   font-weight: 500;
   color: #1a1a1a;
   cursor: pointer;
+  margin-right: 20px;
 }
 
 .balance-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 1.5rem;
-  background: #f8f9fa;
-  border-radius: 12px;
+  background: transparent;
   margin-bottom: 2rem;
 }
 
@@ -8572,6 +8572,14 @@
   font-size: 0.875rem;
   color: #666;
   margin-bottom: 0.5rem;
+}
+
+.balance-meta .balance-label {
+  margin-bottom: 0;
+}
+
+.balance-meta .balance-amount {
+  margin: 0;
 }
 
 .balance-amount-row {
@@ -8682,6 +8690,10 @@
   font-weight: 600;
   color: #1a1a1a;
   margin: 0 0 1rem 0;
+}
+
+.exchange-rate-card .section-title {
+  text-align: left;
 }
 
 .search-input {
