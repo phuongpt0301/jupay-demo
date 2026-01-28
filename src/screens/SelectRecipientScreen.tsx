@@ -193,7 +193,7 @@ const SelectRecipientScreen: React.FC = () => {
                     <button
                       key={recipient.id}
                       className="recipient-card"
-                      onClick={() => handleRecipientClick(recipient)}
+                      onClick={() => handleRecipientClick()}
                     >
                       <div className="recipient-info">
                         <div className="recipient-header-row">
