@@ -100,7 +100,7 @@ const DashboardScreen: React.FC = () => {
         {/* Header */}
         <div className="all-services-header">
           <h1 className="all-services-title">All Services</h1>
-          <button className="profile-icon-btn" onClick={() => navigate(`/${ScreenType.PROFILE}`)}>
+          <button className="profile-icon-btn" onClick={() => navigate(`/${ScreenType.PROFILE_INFO}`)}>
             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="36" height="36" rx="18" fill="#9095A0" />
               <path d="M19.3501 19.8H16.6501C14.4131 19.8 12.6001 21.6131 12.6001 23.85C12.6001 23.85 14.6251 24.75 18.0001 24.75C21.3751 24.75 23.4001 23.85 23.4001 23.85C23.4001 21.6131 21.587 19.8 19.3501 19.8Z" stroke="white" stroke-width="1.08" stroke-miterlimit="10" stroke-linecap="square" />
