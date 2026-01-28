@@ -50,7 +50,8 @@ import {
   NotificationsScreen,
   SecuritySettingsScreen,
   HelpCenterScreen,
-  PaymentQRScreen
+  PaymentQRScreen,
+  BillCartScreen
 } from '../screens';
 
 /**
@@ -388,6 +389,16 @@ const AppRouter: React.FC = () => {
           element={
             <ProtectedRoute requireAuth={true}>
               {withErrorBoundary(PayBillsScreen, 'Pay Bills')}
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Bill Cart Screen (protected) */}
+        <Route 
+          path={`/${ScreenType.BILL_CART}`} 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              {withErrorBoundary(BillCartScreen, 'Bill Cart')}
             </ProtectedRoute>
           } 
         />

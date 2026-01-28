@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ScreenType } from '../types';
 import { Modal, useModal } from '../components';
 import './screens.css';
 
@@ -38,12 +39,17 @@ const PayBillsScreen: React.FC = () => {
     showModal({ title: 'Category Selected', message: `${category} category selected`, type: 'info' });
   };
 
-  const handleBillClick = (bill: Bill) => {
-    showModal({ title: 'Pay Bill', message: `Pay ${bill.name} - SGD ${bill.amount}`, type: 'info' });
+  const handleBillClick = (_bill: Bill) => {
+    // Navigate to Bill Cart screen
+    navigate(`/${ScreenType.BILL_CART}`);
   };
 
   const handleAddBill = () => {
     showModal({ title: 'Add Bill', message: 'Add new bill functionality', type: 'info' });
+  };
+
+  const handleViewCart = () => {
+    navigate(`/${ScreenType.BILL_CART}`);
   };
 
   return (
@@ -121,16 +127,9 @@ const PayBillsScreen: React.FC = () => {
                 <h3 className="summary-title">3 bills due this month</h3>
                 <p className="summary-amount">SGD {totalDue.toFixed(2)}</p>
               </div>
-              <div>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.60658 13.0767C5.28247 13.4009 4.75708 13.4009 4.43296 13.0767C4.10876 12.7526 4.10876 12.2272 4.43296 11.903L9.41296 6.92303C9.73708 6.59892 10.2625 6.59892 10.5866 6.92303L15.5666 11.903L15.6233 11.9663C15.8892 12.2923 15.8705 12.7728 15.5666 13.0767C15.2627 13.3806 14.7822 13.3993 14.4562 13.1335L14.3929 13.0767L9.99977 8.68355L5.60658 13.0767Z" fill="#171A1F"/>
-                </svg>
-              </div>
-              <div>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5.60658 13.0767C5.28247 13.4009 4.75708 13.4009 4.43296 13.0767C4.10876 12.7526 4.10876 12.2272 4.43296 11.903L9.41296 6.92303C9.73708 6.59892 10.2625 6.59892 10.5866 6.92303L15.5666 11.903L15.6233 11.9663C15.8892 12.2923 15.8705 12.7728 15.5666 13.0767C15.2627 13.3806 14.7822 13.3993 14.4562 13.1335L14.3929 13.0767L9.99977 8.68355L5.60658 13.0767Z" fill="#171A1F"/>
-                </svg>
-              </div>
+              <button className="view-cart-btn" onClick={handleViewCart}>
+                View Cart
+              </button>
             </div>
 
             {/* Bills List */}

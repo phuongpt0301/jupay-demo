@@ -48,3 +48,4 @@ export { default as NotificationsScreen } from './NotificationsScreen';
 export { default as SecuritySettingsScreen } from './SecuritySettingsScreen';
 export { default as HelpCenterScreen } from './HelpCenterScreen';
 export { default as PaymentQRScreen } from './PaymentQRScreen';
+export { default as BillCartScreen } from './BillCartScreen';

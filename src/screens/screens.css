@@ -6001,6 +6001,7 @@
 .select-recipient-container .border,
 .add-recipient-container .border,
 .payment-qr-container .border,
+.bill-cart-container .border,
 .create-account-container .border {
   height: 1px;
   width: 100%;
@@ -8201,6 +8202,23 @@
   font-weight: 700;
   color: #1a1a1a;
   margin: 0;
+}
+
+.view-cart-btn {
+  background: transparent;
+  border: 1px solid #DEE1E6;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #171A1F;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-cart-btn:hover {
+  background: #f8f9fa;
+  border-color: #BCC1CA;
 }
 
 .bills-list {
@@ -10611,4 +10629,275 @@ kyc-compliance-content {
 
 .qr-cancel-btn:hover {
   color: #565E6D;
+}
+
+/* ============================================================================
+   Bill Cart Screen Styles
+   ============================================================================ */
+
+.bill-cart-screen {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.bill-cart-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bill-cart-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Header */
+.bill-cart-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+.bill-cart-header .back-btn {
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  margin-left: -0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.bill-cart-header .back-btn:hover {
+  background: #f5f5f5;
+}
+
+.bill-cart-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #171A1F;
+  margin: 0;
+}
+
+/* Bills List */
+.bill-cart-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bill-cart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.bill-cart-item:last-child {
+  border-bottom: none;
+}
+
+.bill-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  border: 2px solid #DEE1E6;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.bill-checkbox.checked {
+  background: #000000 !important;
+  border-color: #000000 !important;
+  accent-color: rgba(0, 0, 0, 0.5);
+}
+
+.bill-checkbox:hover {
+  border-color: #9095A0;
+}
+
+.bill-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bill-item-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #171A1F;
+}
+
+.bill-item-amount {
+  font-size: 0.9375rem;
+  color: #171A1F;
+}
+
+.bill-item-due {
+  font-size: 0.875rem;
+  color: #9095A0;
+}
+
+.bill-delete-btn {
+  background: transparent;
+  border: 1px solid #DEE1E6;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.bill-delete-btn:hover {
+  background: #f8f9fa;
+  border-color: #BCC1CA;
+}
+
+.bill-delete-btn:hover svg path {
+  stroke: #dc2626;
+}
+
+/* Empty State */
+.bill-cart-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 1rem;
+}
+
+.bill-cart-empty p {
+  font-size: 1rem;
+  color: #9095A0;
+  margin: 0;
+}
+
+.add-bills-link {
+  background: transparent;
+  border: none;
+  color: #171A1F;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.add-bills-link:hover {
+  color: #565E6D;
+}
+
+/* Summary Section */
+.bill-cart-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  margin-top: auto;
+}
+
+.bill-cart-summary .summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bill-cart-summary .summary-label {
+  font-size: 1rem;
+  color: #565E6D;
+}
+
+.bill-cart-summary .summary-value {
+  font-size: 1rem;
+  color: #171A1F;
+}
+
+.bill-cart-summary .summary-divider {
+  height: 1px;
+  background: #DEE1E6;
+  margin: 0.5rem 0;
+}
+
+.bill-cart-summary .total-row {
+  margin-top: 0.25rem;
+}
+
+.bill-cart-summary .summary-label-total {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #171A1F;
+}
+
+.bill-cart-summary .summary-value-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #171A1F;
+}
+
+/* Action Buttons */
+.bill-cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0 2rem;
+}
+
+.add-more-bills-btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  color: #171A1F;
+  border: 1px solid #DEE1E6;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-more-bills-btn:hover {
+  background: #f8f9fa;
+  border-color: #BCC1CA;
+}
+
+.proceed-payment-btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: transparent;
+  color: #171A1F;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.proceed-payment-btn:hover:not(:disabled) {
+  color: #565E6D;
+}
+
+.proceed-payment-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

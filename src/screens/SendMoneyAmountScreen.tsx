@@ -34,21 +34,21 @@ const SendMoneyAmountScreen: React.FC = () => {
     if (value.endsWith('.')) {
       return 'Please enter a valid amount';
     }
-    
+
     const numValue = parseFloat(value);
-    
+
     if (isNaN(numValue) || numValue <= 0) {
       return 'Amount must be greater than 0';
     }
-    
+
     if (numValue < MIN_AMOUNT) {
       return `Minimum amount is $${MIN_AMOUNT}`;
     }
-    
+
     if (numValue > MAX_AMOUNT) {
       return `Maximum amount is $${MAX_AMOUNT.toLocaleString()}`;
     }
-    
+
     return undefined;
   };
 
@@ -121,10 +121,10 @@ const SendMoneyAmountScreen: React.FC = () => {
   const handleContinue = () => {
     // Mark all fields as touched to show errors
     setTouched({ amount: true, purpose: true, reference: true });
-    
+
     // Only navigate if form is valid
     if (isFormValid) {
-      navigate(`/${ScreenType.SELECT_PAYMENT_METHOD}`, {
+      navigate(`/${ScreenType.BILL_CART}`, {
         state: { recipient, amount, purpose, reference, scheduleOption }
       });
     }
@@ -206,13 +206,16 @@ const SendMoneyAmountScreen: React.FC = () => {
           <button className="number-btn" onClick={() => handleNumberClick('.')}>.</button>
           <button className="number-btn" onClick={() => handleNumberClick('0')}>0</button>
           <button className="number-btn backspace-btn" onClick={handleBackspace}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.2929 5.2929C17.6834 4.90237 18.3164 4.90237 18.7069 5.2929C19.0975 5.68342 19.0975 6.31643 18.7069 6.70696L6.70695 18.707C6.31643 19.0975 5.68341 19.0975 5.29289 18.707C4.90237 18.3165 4.90237 17.6834 5.29289 17.2929L17.2929 5.2929Z" fill="#565E6D" />
-              <path d="M5.29274 5.29274C5.65885 4.92662 6.23786 4.90403 6.63063 5.22438L6.7068 5.29274L18.7068 17.2928L18.7752 17.369C19.0955 17.7617 19.0729 18.3407 18.7068 18.7068C18.3407 19.073 17.7617 19.0956 17.3689 18.7752L17.2928 18.7068L5.29274 6.7068L5.22438 6.63063C4.90403 6.23786 4.92662 5.65885 5.29274 5.29274Z" fill="#565E6D" />
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.4702 4.17017C17.9286 4.17017 18.3002 4.54177 18.3002 5.00017C18.3002 5.45856 17.9286 5.83017 17.4702 5.83017L2.5302 5.83017C2.0718 5.83017 1.7002 5.45856 1.7002 5.00017C1.7002 4.54177 2.0718 4.17017 2.5302 4.17017L17.4702 4.17017Z" fill="#565E6D" />
+              <path d="M3.36035 16.6502L3.36035 5.0302C3.36035 4.5718 3.73196 4.2002 4.19035 4.2002C4.64874 4.2002 5.02035 4.5718 5.02035 5.0302L5.02035 16.6502C5.02035 16.7953 5.10118 17.0098 5.29594 17.2046C5.4907 17.3994 5.70529 17.4802 5.85035 17.4802L14.1504 17.4802C14.2954 17.4802 14.51 17.3994 14.7048 17.2046C14.8995 17.0098 14.9804 16.7953 14.9804 16.6502L14.9804 5.0302C14.9804 4.5718 15.3519 4.2002 15.8104 4.2002C16.2688 4.2002 16.6404 4.5718 16.6404 5.0302L16.6404 16.6502C16.6404 17.3351 16.3062 17.9506 15.8784 18.3783C15.4507 18.806 14.8353 19.1402 14.1504 19.1402L5.85035 19.1402C5.16541 19.1402 4.55 18.806 4.12227 18.3783C3.69453 17.9506 3.36035 17.3351 3.36035 16.6502Z" fill="#565E6D" />
+              <path d="M12.4906 4.99009L12.4906 3.33009C12.4906 3.18503 12.4097 2.97044 12.215 2.77567C12.0202 2.58091 11.8057 2.50009 11.6606 2.50009L8.34059 2.50009C8.19553 2.50009 7.98094 2.58091 7.78617 2.77567C7.59141 2.97044 7.51059 3.18503 7.51059 3.33009L7.51059 4.99009C7.51059 5.44848 7.13898 5.82009 6.68059 5.82009C6.22219 5.82009 5.85059 5.44848 5.85059 4.99009L5.85059 3.33009C5.85059 2.64515 6.18476 2.02974 6.6125 1.602C7.04023 1.17426 7.65565 0.840088 8.34059 0.840088L11.6606 0.840088C12.3455 0.840088 12.9609 1.17426 13.3886 1.602C13.8164 2.02974 14.1506 2.64515 14.1506 3.33009V4.99009C14.1506 5.44848 13.779 5.82009 13.3206 5.82009C12.8622 5.82009 12.4906 5.44848 12.4906 4.99009Z" fill="#565E6D" />
+              <path d="M7.5 14.1601L7.5 9.1801C7.5 8.72169 7.87161 8.3501 8.33 8.3501C8.78841 8.3501 9.16 8.72169 9.16 9.1801L9.16 14.1601C9.16 14.6185 8.78841 14.9901 8.33 14.9901C7.87161 14.9901 7.5 14.6185 7.5 14.1601Z" fill="#565E6D" />
+              <path d="M10.8398 14.1601L10.8398 9.1801C10.8398 8.72169 11.2114 8.3501 11.6698 8.3501C12.1283 8.3501 12.4998 8.72169 12.4998 9.1801L12.4998 14.1601C12.4998 14.6185 12.1283 14.9901 11.6698 14.9901C11.2114 14.9901 10.8398 14.6185 10.8398 14.1601Z" fill="#565E6D" />
             </svg>
           </button>
         </div>
-        
+
         {/* Purpose */}
         <div className="payment-details-section">
           <label className="detail-label">Purpose</label>
@@ -281,8 +284,8 @@ const SendMoneyAmountScreen: React.FC = () => {
         </div>
 
         {/* Continue Button */}
-        <button 
-          className={`continue-btn ${!isFormValid ? 'continue-btn-disabled' : ''}`} 
+        <button
+          className={`continue-btn ${!isFormValid ? 'continue-btn-disabled' : ''}`}
           onClick={handleContinue}
         >
           Continue
