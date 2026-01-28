@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Modal, useModal } from '../components';
+import { ScreenType } from '../types';
 import './screens.css';
 import ProductImg from '../assets/product.png';
 
@@ -20,6 +21,8 @@ interface RecentNumber {
 const MobileTopUpScreen: React.FC = () => {
   const navigate = useNavigate();
   const { modalState, showModal, hideModal } = useModal();
+  const [selectedTelco, setSelectedTelco] = useState<string | null>(null);
+  const [selectedNumber, setSelectedNumber] = useState<string | null>(null);
 
   const telcos: Telco[] = [
     { name: 'SingTel' },
@@ -40,7 +43,15 @@ const MobileTopUpScreen: React.FC = () => {
   };
 
   const handleTelcoClick = (telco: string) => {
-    showModal({ title: 'Telco Selected', message: `Selected: ${telco}`, type: 'info' });
+    setSelectedTelco(telco);
+    // Navigate to QR payment screen with telco info
+    navigate(`/${ScreenType.PAYMENT_QR}`, {
+      state: { 
+        amount: '50.00', 
+        phone: selectedNumber || '+65 9123 4567', 
+        telco: telco 
+      }
+    });
   };
 
   const handleInternationalTopUp = () => {
@@ -48,7 +59,15 @@ const MobileTopUpScreen: React.FC = () => {
   };
 
   const handleRecentNumberClick = (number: string) => {
-    showModal({ title: 'Top Up', message: `Top up ${number}`, type: 'info' });
+    setSelectedNumber(number);
+    // Navigate to QR payment screen with phone number
+    navigate(`/${ScreenType.PAYMENT_QR}`, {
+      state: { 
+        amount: '50.00', 
+        phone: number, 
+        telco: selectedTelco || 'SingTel' 
+      }
+    });
   };
 
   return (

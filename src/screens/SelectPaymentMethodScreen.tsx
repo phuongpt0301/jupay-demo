@@ -17,6 +17,14 @@ const SelectPaymentMethodScreen: React.FC = () => {
   const total = parseFloat(amount || '0') + fee;
 
   const handleContinue = () => {
+    // If QR payment is selected, navigate to QR screen
+    if (selectedMethod === 'qr') {
+      navigate(`/${ScreenType.PAYMENT_QR}`, {
+        state: { amount, phone: recipient?.phone || '+65 9123 4567', telco: 'SingTel' }
+      });
+      return;
+    }
+    
     navigate(`/${ScreenType.REVIEW_PAYMENT}`, {
       state: { recipient, amount, purpose, reference, paymentMethod: selectedMethod, fee, total }
     });

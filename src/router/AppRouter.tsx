@@ -49,7 +49,8 @@ import {
   PaymentMethodsScreen,
   NotificationsScreen,
   SecuritySettingsScreen,
-  HelpCenterScreen
+  HelpCenterScreen,
+  PaymentQRScreen
 } from '../screens';
 
 /**
@@ -367,6 +368,16 @@ const AppRouter: React.FC = () => {
           element={
             <ProtectedRoute requireAuth={true}>
               {withErrorBoundary(PaymentConfirmationScreen, 'Payment Confirmation')}
+            </ProtectedRoute>
+          } 
+        />
+        
+        {/* Payment QR Screen (protected) */}
+        <Route 
+          path={`/${ScreenType.PAYMENT_QR}`} 
+          element={
+            <ProtectedRoute requireAuth={true}>
+              {withErrorBoundary(PaymentQRScreen, 'Payment QR')}
             </ProtectedRoute>
           } 
         />

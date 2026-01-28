@@ -57,7 +57,8 @@ export const ScreenType = {
   PAYMENT_METHODS: 'payment-methods',
   NOTIFICATIONS: 'notifications',
   SECURITY_SETTINGS: 'security-settings',
-  HELP_CENTER: 'help-center'
+  HELP_CENTER: 'help-center',
+  PAYMENT_QR: 'payment-qr'
 } as const;
 
 export type ScreenType = typeof ScreenType[keyof typeof ScreenType];
