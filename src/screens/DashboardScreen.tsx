@@ -17,7 +17,7 @@ interface Service {
 // All services data (moved outside component for useMemo optimization)
 const ALL_SERVICES: Service[] = [
   // Local Payments
-  { id: 'pay-anything', name: 'Pay Anything (P2P transfers)', category: 'LOCAL PAYMENTS', route: ScreenType.SEND_MONEY, keywords: ['pay', 'p2p', 'transfer', 'send', 'money', 'local'] },
+  { id: 'pay-anything', name: 'Pay Anything (P2P transfers)', category: 'LOCAL PAYMENTS', route: ScreenType.SELECT_RECIPIENT, keywords: ['pay', 'p2p', 'transfer', 'send', 'money', 'local'] },
   { id: 'telco-topup', name: 'Telco Top-up (Mobile recharge)', category: 'LOCAL PAYMENTS', route: ScreenType.MOBILE_TOPUP, keywords: ['telco', 'topup', 'mobile', 'recharge', 'phone', 'prepaid'] },
   { id: 'pay-bills', name: 'Pay Bills', category: 'LOCAL PAYMENTS', route: ScreenType.PAY_BILLS, keywords: ['bills', 'utilities', 'electricity', 'water', 'internet'] },
   // International
