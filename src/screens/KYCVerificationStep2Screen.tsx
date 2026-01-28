@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 /**
@@ -13,6 +14,7 @@ const KYCVerificationStep2Screen: React.FC = () => {
   const [frontUploaded, setFrontUploaded] = useState(false);
   const [backUploaded, setBackUploaded] = useState(false);
   const [selfieUploaded, setSelfieUploaded] = useState(false);
+  const { modalState, showModal, hideModal } = useModal();
 
   const handleBack = () => {
     navigate(-1);
@@ -20,24 +22,24 @@ const KYCVerificationStep2Screen: React.FC = () => {
 
   const handleUploadFront = () => {
     setFrontUploaded(true);
-    alert('Front of document uploaded');
+    showModal({ title: 'Upload Complete', message: 'Front of document uploaded', type: 'success' });
   };
 
   const handleUploadBack = () => {
     setBackUploaded(true);
-    alert('Back of document uploaded');
+    showModal({ title: 'Upload Complete', message: 'Back of document uploaded', type: 'success' });
   };
 
   const handleUploadSelfie = () => {
     setSelfieUploaded(true);
-    alert('Selfie uploaded');
+    showModal({ title: 'Upload Complete', message: 'Selfie uploaded', type: 'success' });
   };
 
   const handleContinue = () => {
     if (documentType && frontUploaded && backUploaded && selfieUploaded) {
       navigate(`/${ScreenType.KYC_VERIFICATION_STEP3}`);
     } else {
-      alert('Please select document type and upload all required documents');
+      showModal({ title: 'Missing Documents', message: 'Please select document type and upload all required documents', type: 'warning' });
     }
   };
 
@@ -131,6 +133,14 @@ const KYCVerificationStep2Screen: React.FC = () => {
           Upload & Continue
         </button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

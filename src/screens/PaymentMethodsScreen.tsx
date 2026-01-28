@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 interface PaymentCard {
@@ -15,6 +16,7 @@ interface PaymentCard {
  */
 const PaymentMethodsScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { modalState, showModal, hideModal } = useModal();
   const [cards, setCards] = useState<PaymentCard[]>([
     { id: '1', lastFour: '9010', expiryDate: '12/26', isDefault: false },
     { id: '2', lastFour: '4521', expiryDate: '09/25', isDefault: false }
@@ -31,17 +33,31 @@ const PaymentMethodsScreen: React.FC = () => {
   };
 
   const handleEdit = (cardId: string) => {
-    alert(`Edit card ${cardId}`);
+    showModal({
+      title: 'Edit Card',
+      message: `Edit card ${cardId}`,
+      type: 'info',
+    });
   };
 
   const handleDelete = (cardId: string) => {
-    if (confirm('Are you sure you want to delete this card?')) {
-      setCards(prev => prev.filter(card => card.id !== cardId));
-    }
+    showModal({
+      title: 'Delete Card',
+      message: 'Are you sure you want to delete this card?',
+      type: 'warning',
+      showCancel: true,
+      onConfirm: () => {
+        setCards(prev => prev.filter(card => card.id !== cardId));
+      },
+    });
   };
 
   const handleAddNewCard = () => {
-    alert('Add new card functionality');
+    showModal({
+      title: 'Add New Card',
+      message: 'Add new card functionality',
+      type: 'info',
+    });
   };
 
   return (
@@ -117,6 +133,16 @@ const PaymentMethodsScreen: React.FC = () => {
           Add New Card
         </button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        showCancel={modalState.showCancel}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   );
 };

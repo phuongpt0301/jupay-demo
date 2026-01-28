@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 import ProductImg from '../assets/product.png';
 
@@ -15,6 +16,7 @@ interface Country {
 const PayOverseasBillsScreen: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { modalState, showModal, hideModal } = useModal();
 
   const popularCountries: Country[] = [
     { name: 'Malaysia', popular: true },
@@ -66,11 +68,11 @@ const PayOverseasBillsScreen: React.FC = () => {
   };
 
   const handleCountrySelect = (country: string) => {
-    alert(`Selected country: ${country}`);
+    showModal({ title: 'Country Selected', message: `Selected country: ${country}`, type: 'info' });
   };
 
   const handleNext = () => {
-    alert('Proceed to next step');
+    showModal({ title: 'Next Step', message: 'Proceed to next step', type: 'info' });
   };
 
   return (
@@ -154,6 +156,14 @@ const PayOverseasBillsScreen: React.FC = () => {
           Next
         </button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

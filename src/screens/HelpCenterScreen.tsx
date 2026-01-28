@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 interface FAQ {
@@ -16,6 +17,7 @@ interface FAQ {
 const HelpCenterScreen: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { modalState, showModal, hideModal } = useModal();
   const [faqs, setFaqs] = useState<FAQ[]>([
     { id: '1', question: 'How do I top up my wallet?', answer: 'You can top up your wallet by...', expanded: false },
     { id: '2', question: 'Are there fees for overseas transfer?', answer: 'Fees vary depending on...', expanded: false },
@@ -34,11 +36,19 @@ const HelpCenterScreen: React.FC = () => {
   };
 
   const handleLiveChat = () => {
-    alert('Opening live chat...');
+    showModal({
+      title: 'Live Chat',
+      message: 'Opening live chat...',
+      type: 'info',
+    });
   };
 
   const handleEmailSupport = () => {
-    alert('Opening email support...');
+    showModal({
+      title: 'Email Support',
+      message: 'Opening email support...',
+      type: 'info',
+    });
   };
 
   return (
@@ -135,6 +145,14 @@ const HelpCenterScreen: React.FC = () => {
           <p className="version-text">Version 11.0</p>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

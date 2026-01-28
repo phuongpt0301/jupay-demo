@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 interface ActiveSession {
@@ -17,6 +18,7 @@ interface ActiveSession {
 const SecuritySettingsScreen: React.FC = () => {
   const navigate = useNavigate();
   const [biometricsEnabled, setBiometricsEnabled] = useState(true);
+  const { modalState, showModal, hideModal } = useModal();
 
   const activeSessions: ActiveSession[] = [
     { id: '1', device: 'iPhone 14 Pro (This device)', location: 'Singapore', time: 'Just now', isCurrent: true },
@@ -28,17 +30,35 @@ const SecuritySettingsScreen: React.FC = () => {
   };
 
   const handleChangePIN = () => {
-    alert('Change PIN functionality');
+    showModal({
+      title: 'Change PIN',
+      message: 'Change PIN functionality',
+      type: 'info',
+    });
   };
 
   const handleChangePassword = () => {
-    alert('Change Password functionality');
+    showModal({
+      title: 'Change Password',
+      message: 'Change Password functionality',
+      type: 'info',
+    });
   };
 
   const handleLogOutOtherDevices = () => {
-    if (confirm('Are you sure you want to log out all other devices?')) {
-      alert('Logged out from all other devices');
-    }
+    showModal({
+      title: 'Log Out Other Devices',
+      message: 'Are you sure you want to log out all other devices?',
+      type: 'warning',
+      showCancel: true,
+      onConfirm: () => {
+        showModal({
+          title: 'Success',
+          message: 'Logged out from all other devices',
+          type: 'success',
+        });
+      },
+    });
   };
 
   return (
@@ -159,6 +179,16 @@ const SecuritySettingsScreen: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        showCancel={modalState.showCancel}
+        onConfirm={modalState.onConfirm}
+      />
     </div>
   );
 };

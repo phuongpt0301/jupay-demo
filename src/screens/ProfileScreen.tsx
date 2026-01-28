@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScreenType } from '../types';
 import useNavigationWithLoading from '../hooks/useNavigationWithLoading';
 import { useAppState, useAuth } from '../hooks';
-import { ScreenContainer } from '../components';
+import { ScreenContainer, Modal, useModal } from '../components';
 import './screens.css';
 
 /**
@@ -28,6 +28,7 @@ const ProfileScreen: React.FC = () => {
   const { navigateWithLoading } = useNavigationWithLoading();
   const { user, accountBalance } = useAppState();
   const { logout } = useAuth();
+  const { modalState, showModal, hideModal } = useModal();
   
   // Local state for settings toggles (demo functionality)
   const [settings, setSettings] = useState({
@@ -64,7 +65,11 @@ const ProfileScreen: React.FC = () => {
     
     // Show demo feedback
     setTimeout(() => {
-      alert(`Demo: ${setting} setting ${!settings[setting] ? 'enabled' : 'disabled'}`);
+      showModal({
+        title: 'Setting Changed',
+        message: `Demo: ${setting} setting ${!settings[setting] ? 'enabled' : 'disabled'}`,
+        type: 'info',
+      });
     }, 100);
   };
 
@@ -72,66 +77,42 @@ const ProfileScreen: React.FC = () => {
    * Handle demo help actions
    */
   const handleHelpAction = (action: string) => {
-    switch (action) {
-      case 'faq':
-        alert('Demo: FAQ section would open here with frequently asked questions about payments, security, and account management.');
-        break;
-      case 'contact':
-        alert('Demo: Contact support would open here with phone, email, and chat options.');
-        break;
-      case 'tutorial':
-        alert('Demo: App tutorial would start here, guiding users through key features.');
-        break;
-      case 'feedback':
-        alert('Demo: Feedback form would open here for users to submit suggestions and report issues.');
-        break;
-      default:
-        alert('Demo: This help feature is not yet implemented.');
-    }
+    const messages: Record<string, { title: string; message: string }> = {
+      faq: { title: 'FAQ', message: 'Demo: FAQ section would open here with frequently asked questions about payments, security, and account management.' },
+      contact: { title: 'Contact Support', message: 'Demo: Contact support would open here with phone, email, and chat options.' },
+      tutorial: { title: 'App Tutorial', message: 'Demo: App tutorial would start here, guiding users through key features.' },
+      feedback: { title: 'Feedback', message: 'Demo: Feedback form would open here for users to submit suggestions and report issues.' },
+    };
+    const info = messages[action] || { title: 'Help', message: 'Demo: This help feature is not yet implemented.' };
+    showModal({ title: info.title, message: info.message, type: 'info' });
   };
 
   /**
    * Handle demo security actions
    */
   const handleSecurityAction = (action: string) => {
-    switch (action) {
-      case 'changePassword':
-        alert('Demo: Change password form would open here with current and new password fields.');
-        break;
-      case 'twoFactor':
-        alert('Demo: Two-factor authentication setup would open here with SMS and authenticator app options.');
-        break;
-      case 'deviceManagement':
-        alert('Demo: Device management would show list of logged-in devices with options to revoke access.');
-        break;
-      case 'loginHistory':
-        alert('Demo: Login history would show recent login attempts with timestamps and locations.');
-        break;
-      default:
-        alert('Demo: This security feature is not yet implemented.');
-    }
+    const messages: Record<string, { title: string; message: string }> = {
+      changePassword: { title: 'Change Password', message: 'Demo: Change password form would open here with current and new password fields.' },
+      twoFactor: { title: 'Two-Factor Auth', message: 'Demo: Two-factor authentication setup would open here with SMS and authenticator app options.' },
+      deviceManagement: { title: 'Device Management', message: 'Demo: Device management would show list of logged-in devices with options to revoke access.' },
+      loginHistory: { title: 'Login History', message: 'Demo: Login history would show recent login attempts with timestamps and locations.' },
+    };
+    const info = messages[action] || { title: 'Security', message: 'Demo: This security feature is not yet implemented.' };
+    showModal({ title: info.title, message: info.message, type: 'info' });
   };
 
   /**
    * Handle demo account actions
    */
   const handleAccountAction = (action: string) => {
-    switch (action) {
-      case 'editProfile':
-        alert('Demo: Edit profile form would open here to update name, email, phone, and profile picture.');
-        break;
-      case 'paymentMethods':
-        alert('Demo: Payment methods management would show linked cards and bank accounts with options to add/remove.');
-        break;
-      case 'transactionLimits':
-        alert('Demo: Transaction limits settings would allow users to set daily/monthly spending limits.');
-        break;
-      case 'closeAccount':
-        alert('Demo: Account closure process would start here with confirmation steps and data export options.');
-        break;
-      default:
-        alert('Demo: This account feature is not yet implemented.');
-    }
+    const messages: Record<string, { title: string; message: string }> = {
+      editProfile: { title: 'Edit Profile', message: 'Demo: Edit profile form would open here to update name, email, phone, and profile picture.' },
+      paymentMethods: { title: 'Payment Methods', message: 'Demo: Payment methods management would show linked cards and bank accounts with options to add/remove.' },
+      transactionLimits: { title: 'Transaction Limits', message: 'Demo: Transaction limits settings would allow users to set daily/monthly spending limits.' },
+      closeAccount: { title: 'Close Account', message: 'Demo: Account closure process would start here with confirmation steps and data export options.' },
+    };
+    const info = messages[action] || { title: 'Account', message: 'Demo: This account feature is not yet implemented.' };
+    showModal({ title: info.title, message: info.message, type: 'info' });
   };
 
   /**
@@ -532,6 +513,14 @@ const ProfileScreen: React.FC = () => {
             Logout
           </button>
         </div>
+
+        <Modal
+          isOpen={modalState.isOpen}
+          onClose={hideModal}
+          title={modalState.title}
+          message={modalState.message}
+          type={modalState.type}
+        />
       </div>
     </ScreenContainer>
   );

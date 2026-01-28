@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 /**
@@ -12,6 +13,7 @@ const ForgotPasswordCodeScreen: React.FC = () => {
   const [code, setCode] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(59);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { modalState, showModal, hideModal } = useModal();
 
   useEffect(() => {
     // Countdown timer
@@ -59,7 +61,11 @@ const ForgotPasswordCodeScreen: React.FC = () => {
     setTimer(59);
     setCode(['', '', '', '', '', '']);
     inputRefs.current[0]?.focus();
-    alert('Code resent!');
+    showModal({
+      title: 'Code Sent',
+      message: 'Code resent!',
+      type: 'success',
+    });
   };
 
   const handleBack = () => {
@@ -129,6 +135,14 @@ const ForgotPasswordCodeScreen: React.FC = () => {
           Resend Code
         </button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

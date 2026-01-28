@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ScreenType } from '../types';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 /**
@@ -10,6 +11,7 @@ const PaymentSuccessScreen: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { amount, total } = location.state || {};
+  const { modalState, showModal, hideModal } = useModal();
 
   const transactionId = 'PAY-1234-5678';
 
@@ -22,7 +24,11 @@ const PaymentSuccessScreen: React.FC = () => {
   };
 
   const handleShareReceipt = () => {
-    alert('Share receipt functionality');
+    showModal({
+      title: 'Share Receipt',
+      message: 'Share receipt functionality',
+      type: 'info',
+    });
   };
 
   return (
@@ -128,6 +134,14 @@ const PaymentSuccessScreen: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

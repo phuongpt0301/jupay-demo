@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import './screens.css';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
+import { Modal, useModal } from '../components';
 
 /**
  * ForgotPasswordVerifyScreen Component
@@ -9,6 +10,8 @@ import { ScreenType } from '../types';
  */
 const ForgotPasswordVerifyScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { modalState, showModal, hideModal } = useModal();
+
   useEffect(() => {
     setTimeout(() => {
       navigate(`/${ScreenType.REGISTER_ADDRESS}`);
@@ -19,7 +22,11 @@ const ForgotPasswordVerifyScreen: React.FC = () => {
   };
 
   const handleResendEmail = () => {
-    alert('Verification email resent!');
+    showModal({
+      title: 'Email Sent',
+      message: 'Verification email resent!',
+      type: 'success',
+    });
   };
 
   return (
@@ -56,6 +63,14 @@ const ForgotPasswordVerifyScreen: React.FC = () => {
 
         <p className="spam-hint">Can't find it? Check spam folder</p>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 import ProductImg from '../assets/product.png';
 
@@ -20,6 +21,7 @@ interface QuickSendContact {
  */
 const SendMoneyAbroadScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { modalState, showModal, hideModal } = useModal();
 
   const exchangeRate = '1 SGD = 42.50 PHP';
 
@@ -41,19 +43,19 @@ const SendMoneyAbroadScreen: React.FC = () => {
   };
 
   const handleCorridorClick = (corridor: Corridor) => {
-    alert(`Selected: ${corridor.from} → ${corridor.to}`);
+    showModal({ title: 'Corridor Selected', message: `Selected: ${corridor.from} → ${corridor.to}`, type: 'info' });
   };
 
   const handleQuickSendClick = (contact: QuickSendContact) => {
-    alert(`Send to ${contact.name}`);
+    showModal({ title: 'Quick Send', message: `Send to ${contact.name}`, type: 'info' });
   };
 
   const handleSeeHowMuch = () => {
-    alert('See how much you can send');
+    showModal({ title: 'Transfer Limits', message: 'See how much you can send', type: 'info' });
   };
 
   const handleAddRecipient = () => {
-    alert('Add new recipient');
+    showModal({ title: 'Add Recipient', message: 'Add new recipient', type: 'info' });
   };
 
   return (
@@ -207,6 +209,14 @@ const SendMoneyAbroadScreen: React.FC = () => {
           </svg>
         </button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

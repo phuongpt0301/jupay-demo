@@ -11,3 +11,5 @@ export { default as ScreenContainer } from './ScreenContainer';
 export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as LoadingErrorBoundary } from './LoadingErrorBoundary';
 export { default as BottomNavigation } from './BottomNavigation';
+export { default as Modal, useModal } from './Modal';
+export type { ModalProps } from './Modal';

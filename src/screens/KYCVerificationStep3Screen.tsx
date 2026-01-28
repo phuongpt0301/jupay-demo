@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 /**
@@ -11,6 +12,7 @@ const KYCVerificationStep3Screen: React.FC = () => {
   const navigate = useNavigate();
   const [documentUploaded, setDocumentUploaded] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<'idle' | 'progress' | 'complete'>('idle');
+  const { modalState, showModal, hideModal } = useModal();
 
   const handleBack = () => {
     navigate(-1);
@@ -19,7 +21,11 @@ const KYCVerificationStep3Screen: React.FC = () => {
   const handleUpload = () => {
     setDocumentUploaded(true);
     setVerificationStatus('progress');
-    alert('Document uploaded. Verification in progress...');
+    showModal({
+      title: 'Document Uploaded',
+      message: 'Document uploaded. Verification in progress...',
+      type: 'info',
+    });
 
     // Simulate verification process
     setTimeout(() => {
@@ -146,6 +152,14 @@ const KYCVerificationStep3Screen: React.FC = () => {
           Resubmit
         </button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

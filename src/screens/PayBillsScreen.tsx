@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 
 interface Bill {
@@ -16,6 +17,7 @@ interface Bill {
  */
 const PayBillsScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { modalState, showModal, hideModal } = useModal();
   const [bills] = useState<Bill[]>([
     { id: '1', name: 'SP Services', dueDate: '25 Oct', amount: 125.50, status: 'pending' },
     { id: '2', name: 'DBS Bank', dueDate: '28 Oct', amount: 890.00, status: 'pending' },
@@ -29,19 +31,19 @@ const PayBillsScreen: React.FC = () => {
   };
 
   const handleManageBillers = () => {
-    alert('Manage Billers functionality');
+    showModal({ title: 'Manage Billers', message: 'Manage Billers functionality', type: 'info' });
   };
 
   const handleCategoryClick = (category: string) => {
-    alert(`${category} category selected`);
+    showModal({ title: 'Category Selected', message: `${category} category selected`, type: 'info' });
   };
 
   const handleBillClick = (bill: Bill) => {
-    alert(`Pay ${bill.name} - SGD ${bill.amount}`);
+    showModal({ title: 'Pay Bill', message: `Pay ${bill.name} - SGD ${bill.amount}`, type: 'info' });
   };
 
   const handleAddBill = () => {
-    alert('Add new bill functionality');
+    showModal({ title: 'Add Bill', message: 'Add new bill functionality', type: 'info' });
   };
 
   return (
@@ -152,6 +154,14 @@ const PayBillsScreen: React.FC = () => {
         {/* Add Bill Button */}
         <button className="floating-add-btn" onClick={handleAddBill}>+</button>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

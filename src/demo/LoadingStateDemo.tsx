@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LoadingState } from '../components';
+import { LoadingState, Modal, useModal } from '../components';
 
 /**
  * Demo component to test LoadingState functionality
@@ -8,6 +8,7 @@ const LoadingStateDemo: React.FC = () => {
   const [showLoading, setShowLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('Loading...');
   const [duration, setDuration] = useState(3000);
+  const { modalState, showModal, hideModal } = useModal();
 
   const handleStartLoading = () => {
     setShowLoading(true);
@@ -15,7 +16,7 @@ const LoadingStateDemo: React.FC = () => {
 
   const handleLoadingComplete = () => {
     setShowLoading(false);
-    alert('Loading completed!');
+    showModal({ title: 'Complete', message: 'Loading completed!', type: 'success' });
   };
 
   return (
@@ -81,6 +82,14 @@ const LoadingStateDemo: React.FC = () => {
           onComplete={handleLoadingComplete}
         />
       )}
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 import ProductImg from '../assets/product.png';
 
@@ -18,6 +19,7 @@ interface RecentNumber {
  */
 const MobileTopUpScreen: React.FC = () => {
   const navigate = useNavigate();
+  const { modalState, showModal, hideModal } = useModal();
 
   const telcos: Telco[] = [
     { name: 'SingTel' },
@@ -38,15 +40,15 @@ const MobileTopUpScreen: React.FC = () => {
   };
 
   const handleTelcoClick = (telco: string) => {
-    alert(`Selected: ${telco}`);
+    showModal({ title: 'Telco Selected', message: `Selected: ${telco}`, type: 'info' });
   };
 
   const handleInternationalTopUp = () => {
-    alert('International Top-up');
+    showModal({ title: 'International Top-up', message: 'International Top-up', type: 'info' });
   };
 
   const handleRecentNumberClick = (number: string) => {
-    alert(`Top up ${number}`);
+    showModal({ title: 'Top Up', message: `Top up ${number}`, type: 'info' });
   };
 
   return (
@@ -139,6 +141,14 @@ const MobileTopUpScreen: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

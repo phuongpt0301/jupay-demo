@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Modal, useModal } from '../components';
 import './screens.css';
 import Slider from '../assets/slider.png';
 import ProductImg from '../assets/product.png';
@@ -16,6 +17,7 @@ interface Brand {
 const GiftCardsScreen: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { modalState, showModal, hideModal } = useModal();
 
   const balance = 1250.75;
 
@@ -33,15 +35,15 @@ const GiftCardsScreen: React.FC = () => {
   };
 
   const handleMyGiftCards = () => {
-    alert('My Gift Cards');
+    showModal({ title: 'My Gift Cards', message: 'My Gift Cards', type: 'info' });
   };
 
   const handleCategoryClick = (category: string) => {
-    alert(`${category} category selected`);
+    showModal({ title: 'Category Selected', message: `${category} category selected`, type: 'info' });
   };
 
   const handleBrandClick = (brand: string) => {
-    alert(`Selected: ${brand}`);
+    showModal({ title: 'Brand Selected', message: `Selected: ${brand}`, type: 'info' });
   };
 
   return (
@@ -163,6 +165,14 @@ const GiftCardsScreen: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={hideModal}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+      />
     </div>
   );
 };

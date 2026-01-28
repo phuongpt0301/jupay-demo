@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenType } from '../types';
 import './screens.css';
@@ -12,6 +12,18 @@ interface Recipient {
   verified: boolean;
 }
 
+// Static recipient data (moved outside component for useMemo optimization)
+const ALL_RECIPIENTS: Recipient[] = [
+  { id: 1, name: 'Sarah Johnson [Tech Solutions]', bank: 'Global Bank', account: '**** 7890', lastTransaction: '2023-11-20', verified: true },
+  { id: 2, name: 'Michael Chen', bank: 'City Bank', account: '**** 1234', lastTransaction: '2023-11-18', verified: true },
+  { id: 3, name: 'Innovate Corp', bank: 'First National', account: '**** 5678', lastTransaction: '2023-11-15', verified: true },
+  { id: 4, name: 'Alice Smith', bank: 'Apex Credit', account: '**** 2345', lastTransaction: '2023-11-22', verified: true },
+  { id: 5, name: 'Bob Williams', bank: 'Pacific Trust', account: '**** 6789', lastTransaction: '2023-11-19', verified: true },
+  { id: 6, name: 'Catherine Lee', bank: 'Summit Finance', account: '**** 0123', lastTransaction: '2023-11-17', verified: true },
+  { id: 7, name: 'David Brown', bank: 'United Savings', account: '**** 4567', lastTransaction: '2023-11-16', verified: true },
+  { id: 8, name: 'Elena Garcia', bank: 'Metro Bank', account: '**** 8901', lastTransaction: '2023-11-14', verified: true },
+];
+
 /**
  * SelectRecipientScreen Component
  * Select Recipient - Shows search and list of all recipients
@@ -20,27 +32,40 @@ const SelectRecipientScreen: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const allRecipients = [
-    { id: 1, name: 'Sarah Johnson [Tech Solutions]', bank: 'Global Bank', account: '**** 7890', lastTransaction: '2023-11-20', verified: true },
-    { id: 2, name: 'Michael Chen', bank: 'City Bank', account: '**** 1234', lastTransaction: '2023-11-18', verified: true },
-    { id: 3, name: 'Innovate Corp', bank: 'First National', account: '**** 5678', lastTransaction: '2023-11-15', verified: true },
-    { id: 4, name: 'Alice Smith', bank: 'Apex Credit', account: '**** 2345', lastTransaction: '2023-11-22', verified: true },
-    { id: 5, name: 'Bob Williams', bank: 'Pacific Trust', account: '**** 6789', lastTransaction: '2023-11-19', verified: true },
-    { id: 6, name: 'Catherine Lee', bank: 'Summit Finance', account: '**** 0123', lastTransaction: '2023-11-17', verified: true },
-    { id: 7, name: 'David Brown', bank: 'United Savings', account: '**** 4567', lastTransaction: '2023-11-16', verified: true },
-    { id: 8, name: 'Elena Garcia', bank: 'Metro Bank', account: '**** 8901', lastTransaction: '2023-11-14', verified: true },
-  ];
+  // Filter recipients based on search query
+  const filteredRecipients = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return ALL_RECIPIENTS;
+
+    return ALL_RECIPIENTS.filter(recipient => 
+      recipient.name.toLowerCase().includes(query) ||
+      recipient.bank.toLowerCase().includes(query) ||
+      recipient.account.toLowerCase().includes(query)
+    );
+  }, [searchQuery]);
+
+  // Recent recipients (first 3 from filtered results)
+  const recentRecipients = useMemo(() => {
+    return filteredRecipients.slice(0, 3);
+  }, [filteredRecipients]);
+
+  // Check if we're searching
+  const isSearching = searchQuery.trim().length > 0;
 
   const handleAddNewRecipient = () => {
     navigate(`/${ScreenType.ADD_RECIPIENT}`);
   };
 
-  const handleRecipientClick = (recipient: Recipient) => {
-    navigate(`/${ScreenType.PAYMENT}`, { state: { recipient: recipient.name } });
+  const handleRecipientClick = () => {
+    navigate(`/${ScreenType.SEND_MONEY_AMOUNT}`);
   };
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
   };
 
   return (
@@ -83,85 +108,120 @@ const SelectRecipientScreen: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <button className="search-clear-btn" onClick={handleClearSearch} aria-label="Clear search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.2426 3.75736C12.5355 4.05025 12.5355 4.52513 12.2426 4.81802L9.06066 8L12.2426 11.182C12.5355 11.4749 12.5355 11.9497 12.2426 12.2426C11.9497 12.5355 11.4749 12.5355 11.182 12.2426L8 9.06066L4.81802 12.2426C4.52513 12.5355 4.05025 12.5355 3.75736 12.2426C3.46447 11.9497 3.46447 11.4749 3.75736 11.182L6.93934 8L3.75736 4.81802C3.46447 4.52513 3.46447 4.05025 3.75736 3.75736C4.05025 3.46447 4.52513 3.46447 4.81802 3.75736L8 6.93934L11.182 3.75736C11.4749 3.46447 11.9497 3.46447 12.2426 3.75736Z" fill="#565E6D"/>
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
+
+          {/* Search Results Count */}
+          {isSearching && (
+            <div className="results-count">
+              Showing {filteredRecipients.length} of {ALL_RECIPIENTS.length} recipients
+            </div>
+          )}
 
           {/* Add New Recipient Button */}
           <button className="add-new-recipient-btn" onClick={handleAddNewRecipient}>
             Add new Recipient
           </button>
 
-          {/* Recent Recipients Section */}
-          <div className="recipients-section">
-            <h2 className="section-title-small">Recent Recipients</h2>
-            <div className="recipients-list">
-              {allRecipients.slice(0, 3).map(recipient => (
-                <button
-                  key={recipient.id}
-                  className="recipient-card"
-                  onClick={() => handleRecipientClick(recipient)}
-                >
-                  <div className="recipient-info">
-                    <div className="recipient-header-row">
-                      <span className="recipient-name">{recipient.name}</span>
-                      {recipient.verified && <span className="verified-badge">Verified</span>}
-                    </div>
-                    <div className="recipient-details">
-                      <div className="recipient-bank">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M14.0299 5.32006C14.0299 4.95003 13.7299 4.65006 13.3599 4.65006L2.63988 4.65006C2.26986 4.65006 1.96988 4.95003 1.96988 5.32006L1.96988 10.6801C1.96988 11.0501 2.26986 11.3501 2.63988 11.3501L13.3599 11.3501C13.7299 11.3501 14.0299 11.0501 14.0299 10.6801L14.0299 5.32006ZM15.3699 10.6801C15.3699 11.7902 14.47 12.6901 13.3599 12.6901L2.63988 12.6901C1.52979 12.6901 0.629883 11.7902 0.629883 10.6801L0.629883 5.32006C0.629883 4.20997 1.52979 3.31006 2.63988 3.31006L13.3599 3.31006C14.47 3.31006 15.3699 4.20997 15.3699 5.32006L15.3699 10.6801Z" fill="#171A1F" />
-                          <path d="M8.67023 7.99999C8.67023 7.62995 8.37028 7.32999 8.00023 7.32999C7.63019 7.32999 7.33023 7.62995 7.33023 7.99999C7.33023 8.37003 7.63019 8.66999 8.00023 8.66999C8.37028 8.66999 8.67023 8.37003 8.67023 7.99999ZM10.0102 7.99999C10.0102 9.11011 9.11036 10.01 8.00023 10.01C6.89011 10.01 5.99023 9.11011 5.99023 7.99999C5.99023 6.88987 6.89011 5.98999 8.00023 5.98999C9.11036 5.98999 10.0102 6.88987 10.0102 7.99999Z" fill="#171A1F" />
-                          <path d="M3.98612 7.33008L4.05481 7.33336C4.39266 7.36767 4.65612 7.65315 4.65612 8.00008C4.65612 8.347 4.39266 8.63249 4.05481 8.6668L3.98612 8.67008H3.97957C3.60954 8.67008 3.30957 8.37012 3.30957 8.00008C3.30957 7.63004 3.60954 7.33008 3.97957 7.33008H3.98612ZM12.0261 7.33008L12.0948 7.33336C12.4326 7.36767 12.6961 7.65315 12.6961 8.00008C12.6961 8.347 12.4326 8.63249 12.0948 8.6668L12.0261 8.67008H12.0196C11.6495 8.67008 11.3496 8.37012 11.3496 8.00008C11.3496 7.63004 11.6495 7.33008 12.0196 7.33008H12.0261Z" fill="#171A1F" />
-                        </svg>
-                        <div className="recipient-bank-text">
-                          {recipient.bank} · {recipient.account}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="recipient-meta">
-                      <span className="last-transaction">Last transaction: {recipient.lastTransaction}</span>
-                    </div>
-                  </div>
-                </button>
-              ))}
+          {/* No Results */}
+          {filteredRecipients.length === 0 ? (
+            <div className="no-results-message">
+              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 4C12.954 4 4 12.954 4 24C4 35.046 12.954 44 24 44C35.046 44 44 35.046 44 24C44 12.954 35.046 4 24 4ZM24 8C32.837 8 40 15.163 40 24C40 32.837 32.837 40 24 40C15.163 40 8 32.837 8 24C8 15.163 15.163 8 24 8Z" fill="#DEE1E6"/>
+                <path d="M24 14C23.4477 14 23 14.4477 23 15V27C23 27.5523 23.4477 28 24 28C24.5523 28 25 27.5523 25 27V15C25 14.4477 24.5523 14 24 14Z" fill="#DEE1E6"/>
+                <circle cx="24" cy="33" r="1.5" fill="#DEE1E6"/>
+              </svg>
+              <p className="no-results-text">No recipients found for "{searchQuery}"</p>
+              <button className="clear-search-link" onClick={handleClearSearch}>
+                Clear search
+              </button>
             </div>
-          </div>
+          ) : (
+            <>
+              {/* Recent Recipients Section - Only show when not searching */}
+              {!isSearching && (
+                <div className="recipients-section">
+                  <h2 className="section-title-small">Recent Recipients</h2>
+                  <div className="recipients-list">
+                    {recentRecipients.map(recipient => (
+                      <button
+                        key={recipient.id}
+                        className="recipient-card"
+                        onClick={() => handleRecipientClick()}
+                      >
+                        <div className="recipient-info">
+                          <div className="recipient-header-row">
+                            <span className="recipient-name">{recipient.name}</span>
+                            {recipient.verified && <span className="verified-badge">Verified</span>}
+                          </div>
+                          <div className="recipient-details">
+                            <div className="recipient-bank">
+                              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14.0299 5.32006C14.0299 4.95003 13.7299 4.65006 13.3599 4.65006L2.63988 4.65006C2.26986 4.65006 1.96988 4.95003 1.96988 5.32006L1.96988 10.6801C1.96988 11.0501 2.26986 11.3501 2.63988 11.3501L13.3599 11.3501C13.7299 11.3501 14.0299 11.0501 14.0299 10.6801L14.0299 5.32006ZM15.3699 10.6801C15.3699 11.7902 14.47 12.6901 13.3599 12.6901L2.63988 12.6901C1.52979 12.6901 0.629883 11.7902 0.629883 10.6801L0.629883 5.32006C0.629883 4.20997 1.52979 3.31006 2.63988 3.31006L13.3599 3.31006C14.47 3.31006 15.3699 4.20997 15.3699 5.32006L15.3699 10.6801Z" fill="#171A1F" />
+                                <path d="M8.67023 7.99999C8.67023 7.62995 8.37028 7.32999 8.00023 7.32999C7.63019 7.32999 7.33023 7.62995 7.33023 7.99999C7.33023 8.37003 7.63019 8.66999 8.00023 8.66999C8.37028 8.66999 8.67023 8.37003 8.67023 7.99999ZM10.0102 7.99999C10.0102 9.11011 9.11036 10.01 8.00023 10.01C6.89011 10.01 5.99023 9.11011 5.99023 7.99999C5.99023 6.88987 6.89011 5.98999 8.00023 5.98999C9.11036 5.98999 10.0102 6.88987 10.0102 7.99999Z" fill="#171A1F" />
+                                <path d="M3.98612 7.33008L4.05481 7.33336C4.39266 7.36767 4.65612 7.65315 4.65612 8.00008C4.65612 8.347 4.39266 8.63249 4.05481 8.6668L3.98612 8.67008H3.97957C3.60954 8.67008 3.30957 8.37012 3.30957 8.00008C3.30957 7.63004 3.60954 7.33008 3.97957 7.33008H3.98612ZM12.0261 7.33008L12.0948 7.33336C12.4326 7.36767 12.6961 7.65315 12.6961 8.00008C12.6961 8.347 12.4326 8.63249 12.0948 8.6668L12.0261 8.67008H12.0196C11.6495 8.67008 11.3496 8.37012 11.3496 8.00008C11.3496 7.63004 11.6495 7.33008 12.0196 7.33008H12.0261Z" fill="#171A1F" />
+                              </svg>
+                              <div className="recipient-bank-text">
+                                {recipient.bank} · {recipient.account}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="recipient-meta">
+                            <span className="last-transaction">Last transaction: {recipient.lastTransaction}</span>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-          {/* All Recipients Section */}
-          <div className="recipients-section">
-            <h2 className="section-title-small">All Recipients</h2>
-            <div className="recipients-list all-recipients-list">
-              {allRecipients.map(recipient => (
-                <button
-                  key={recipient.id}
-                  className="recipient-card"
-                  onClick={() => handleRecipientClick(recipient)}
-                >
-                  <div className="recipient-info">
-                    <div className="recipient-header-row">
-                      <span className="recipient-name">{recipient.name}</span>
-                      {recipient.verified && <span className="verified-badge">Verified</span>}
-                    </div>
-                    <div className="recipient-details">
-                      <div className="recipient-bank">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M14.0299 5.32006C14.0299 4.95003 13.7299 4.65006 13.3599 4.65006L2.63988 4.65006C2.26986 4.65006 1.96988 4.95003 1.96988 5.32006L1.96988 10.6801C1.96988 11.0501 2.26986 11.3501 2.63988 11.3501L13.3599 11.3501C13.7299 11.3501 14.0299 11.0501 14.0299 10.6801L14.0299 5.32006ZM15.3699 10.6801C15.3699 11.7902 14.47 12.6901 13.3599 12.6901L2.63988 12.6901C1.52979 12.6901 0.629883 11.7902 0.629883 10.6801L0.629883 5.32006C0.629883 4.20997 1.52979 3.31006 2.63988 3.31006L13.3599 3.31006C14.47 3.31006 15.3699 4.20997 15.3699 5.32006L15.3699 10.6801Z" fill="#171A1F" />
-                          <path d="M8.67023 7.99999C8.67023 7.62995 8.37028 7.32999 8.00023 7.32999C7.63019 7.32999 7.33023 7.62995 7.33023 7.99999C7.33023 8.37003 7.63019 8.66999 8.00023 8.66999C8.37028 8.66999 8.67023 8.37003 8.67023 7.99999ZM10.0102 7.99999C10.0102 9.11011 9.11036 10.01 8.00023 10.01C6.89011 10.01 5.99023 9.11011 5.99023 7.99999C5.99023 6.88987 6.89011 5.98999 8.00023 5.98999C9.11036 5.98999 10.0102 6.88987 10.0102 7.99999Z" fill="#171A1F" />
-                          <path d="M3.98612 7.33008L4.05481 7.33336C4.39266 7.36767 4.65612 7.65315 4.65612 8.00008C4.65612 8.347 4.39266 8.63249 4.05481 8.6668L3.98612 8.67008H3.97957C3.60954 8.67008 3.30957 8.37012 3.30957 8.00008C3.30957 7.63004 3.60954 7.33008 3.97957 7.33008H3.98612ZM12.0261 7.33008L12.0948 7.33336C12.4326 7.36767 12.6961 7.65315 12.6961 8.00008C12.6961 8.347 12.4326 8.63249 12.0948 8.6668L12.0261 8.67008H12.0196C11.6495 8.67008 11.3496 8.37012 11.3496 8.00008C11.3496 7.63004 11.6495 7.33008 12.0196 7.33008H12.0261Z" fill="#171A1F" />
-                        </svg>
-                        <div className="recipient-bank-text">
-                          {recipient.bank} · {recipient.account}
+              {/* All Recipients / Search Results Section */}
+              <div className="recipients-section">
+                <h2 className="section-title-small">
+                  {isSearching ? 'Search Results' : 'All Recipients'}
+                </h2>
+                <div className="recipients-list all-recipients-list">
+                  {filteredRecipients.map(recipient => (
+                    <button
+                      key={recipient.id}
+                      className="recipient-card"
+                      onClick={() => handleRecipientClick(recipient)}
+                    >
+                      <div className="recipient-info">
+                        <div className="recipient-header-row">
+                          <span className="recipient-name">{recipient.name}</span>
+                          {recipient.verified && <span className="verified-badge">Verified</span>}
+                        </div>
+                        <div className="recipient-details">
+                          <div className="recipient-bank">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M14.0299 5.32006C14.0299 4.95003 13.7299 4.65006 13.3599 4.65006L2.63988 4.65006C2.26986 4.65006 1.96988 4.95003 1.96988 5.32006L1.96988 10.6801C1.96988 11.0501 2.26986 11.3501 2.63988 11.3501L13.3599 11.3501C13.7299 11.3501 14.0299 11.0501 14.0299 10.6801L14.0299 5.32006ZM15.3699 10.6801C15.3699 11.7902 14.47 12.6901 13.3599 12.6901L2.63988 12.6901C1.52979 12.6901 0.629883 11.7902 0.629883 10.6801L0.629883 5.32006C0.629883 4.20997 1.52979 3.31006 2.63988 3.31006L13.3599 3.31006C14.47 3.31006 15.3699 4.20997 15.3699 5.32006L15.3699 10.6801Z" fill="#171A1F" />
+                              <path d="M8.67023 7.99999C8.67023 7.62995 8.37028 7.32999 8.00023 7.32999C7.63019 7.32999 7.33023 7.62995 7.33023 7.99999C7.33023 8.37003 7.63019 8.66999 8.00023 8.66999C8.37028 8.66999 8.67023 8.37003 8.67023 7.99999ZM10.0102 7.99999C10.0102 9.11011 9.11036 10.01 8.00023 10.01C6.89011 10.01 5.99023 9.11011 5.99023 7.99999C5.99023 6.88987 6.89011 5.98999 8.00023 5.98999C9.11036 5.98999 10.0102 6.88987 10.0102 7.99999Z" fill="#171A1F" />
+                              <path d="M3.98612 7.33008L4.05481 7.33336C4.39266 7.36767 4.65612 7.65315 4.65612 8.00008C4.65612 8.347 4.39266 8.63249 4.05481 8.6668L3.98612 8.67008H3.97957C3.60954 8.67008 3.30957 8.37012 3.30957 8.00008C3.30957 7.63004 3.60954 7.33008 3.97957 7.33008H3.98612ZM12.0261 7.33008L12.0948 7.33336C12.4326 7.36767 12.6961 7.65315 12.6961 8.00008C12.6961 8.347 12.4326 8.63249 12.0948 8.6668L12.0261 8.67008H12.0196C11.6495 8.67008 11.3496 8.37012 11.3496 8.00008C11.3496 7.63004 11.6495 7.33008 12.0196 7.33008H12.0261Z" fill="#171A1F" />
+                            </svg>
+                            <div className="recipient-bank-text">
+                              {recipient.bank} · {recipient.account}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="recipient-meta">
+                          <span className="last-transaction">Last transaction: {recipient.lastTransaction}</span>
                         </div>
                       </div>
-                    </div>
-                    <div className="recipient-meta">
-                      <span className="last-transaction">Last transaction: {recipient.lastTransaction}</span>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Add Button at Bottom */}
           <button className="floating-add-btn" onClick={handleAddNewRecipient}>
